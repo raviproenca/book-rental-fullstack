@@ -34,9 +34,10 @@
 
         <!-- Modal fora de #header-user -->
         <div id="profile-modal">
-          <p class="name">João Silva</p>
-          <p class="email">joao@email.com</p>
-          <a href="/index.html" id="logout-button">Log Out</a>
+          <p class="name"></p>
+          <p class="email"></p>
+          <p class="role"></p>
+          <a id="logout-button">Log Out</a>
         </div>
       </div>
     </header>
@@ -123,7 +124,7 @@
         <button class="close-modal-btn" aria-label="Fechar">
           <span class="material-icons-outlined">close</span>
         </button>
-        <form id="form-cadastrar">
+        <form id="form-cadastrar" novalidate>
           <div class="form-group">
             <label for="register-name">Nome</label>
             <input
@@ -131,7 +132,7 @@
               id="register-name"
               name="name"
               placeholder="Nome"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -141,7 +142,7 @@
               id="register-email"
               name="email"
               placeholder="email@exemplo.com"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -151,17 +152,17 @@
               id="register-telefone"
               name="telefone"
               placeholder="88 88888-8888"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
-            <label for="register-site">Site</label>
+            <label for="register-site">Site (opcional)</label>
             <input
-              type="text"
+              type="url"
               id="register-site"
               name="site"
-              placeholder="www.exemplo.com"
-              oninput="this.setCustomValidity('')"
+              placeholder="https://www.exemplo.com"
+              autocomplete="off"
             />
           </div>
           <div class="modal-actions">
@@ -177,7 +178,7 @@
         <button class="close-modal-btn" aria-label="Fechar">
           <span class="material-icons-outlined">close</span>
         </button>
-        <form id="form-atualizar">
+        <form id="form-atualizar" novalidate>
           <div class="form-group">
             <label for="update-name">Nome</label>
             <input
@@ -185,7 +186,7 @@
               id="update-name"
               name="name"
               placeholder="Nome"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -195,7 +196,7 @@
               id="update-email"
               name="email"
               placeholder="email@exemplo.com"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -205,17 +206,17 @@
               id="update-telefone"
               name="Telefone"
               placeholder="88 88888-8888"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
-            <label for="update-site">Site</label>
+            <label for="update-site">Site (opcional)</label>
             <input
-              type="text"
+              type="url"
               id="update-site"
               name="site"
-              placeholder="www.exemplo.com"
-              required
+              placeholder="https://www.exemplo.com"
+              autocomplete="off"
             />
           </div>
           <div class="modal-actions">
@@ -259,8 +260,8 @@
           <span class="material-icons-outlined">close</span>
         </button>
         <div class="modal-smaller-content">
-          <span class="material-icons-outlined">check_circle</span>
-          <h3>Editora excluída!</h3>
+          <span id="icon_modal" class="material-icons-outlined"></span>
+          <h3 id="text_modal"></h3>
         </div>
       </div>
     </div>
@@ -278,6 +279,6 @@
         </div>
       </div>
     </div>
-    <script src="/js/editoras.js"></script>
+    <script type="module" src="/js/editoras.js"></script>
   </body>
 </html>

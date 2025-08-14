@@ -37,7 +37,6 @@ header h1 {
   text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
 }
 
-/* Container externo para evitar que o modal herde o transform */
 .profile-wrapper {
   position: relative;
   display: flex;
@@ -98,6 +97,13 @@ header h1 {
 #profile-modal .email {
   font-size: 0.875rem;
   color: #666;
+  margin-bottom: 0.25rem;
+  word-break: break-word;
+}
+
+#profile-modal .role {
+  font-size: 0.875rem;
+  color: #666;
   margin-bottom: 0.75rem;
   word-break: break-word;
 }
@@ -106,6 +112,7 @@ header h1 {
   background-color: #e74c3c;
   color: white;
   border: none;
+  text-decoration: none;
   padding: 0.4rem 0.8rem;
   border-radius: 4px;
   cursor: pointer;
@@ -306,6 +313,10 @@ main #users-table td {
 main #users-table td:last-child {
   text-align: center;
   white-space: nowrap;
+}
+
+.editable-cell {
+  word-break: break-word;
 }
 
 main #mensagem-erro {

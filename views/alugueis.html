@@ -24,7 +24,6 @@
 
       <h1>Locadora de livros</h1>
 
-      <!-- Wrapper fora de #header-user -->
       <div class="profile-wrapper">
         <div id="header-user">
           <span id="profile-button" class="material-icons-outlined"
@@ -32,11 +31,11 @@
           >
         </div>
 
-        <!-- Modal fora de #header-user -->
         <div id="profile-modal">
-          <p class="name">João Silva</p>
-          <p class="email">joao@email.com</p>
-          <a href="/index.html" id="logout-button">Log Out</a>
+          <p class="name"></p>
+          <p class="email"></p>
+          <p class="role"></p>
+          <a id="logout-button">Log Out</a>
         </div>
       </div>
     </header>
@@ -99,6 +98,7 @@
                 <th>Locatário</th>
                 <th>Data de Locação</th>
                 <th>Data de Devolução</th>
+                <th>Status</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -126,41 +126,26 @@
         <form id="form-cadastrar">
           <div class="form-group">
             <label for="register-livro">Livro</label>
-            <input
-              type="text"
-              id="register-livro"
-              name="livro"
-              placeholder="Livro"
-              oninput="this.setCustomValidity('')"
-            />
+            <select id="register-livro" oninput="this.setCustomValidity('')">
+              <option value="">Selecione um Livro</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="register-locatario">Locatário</label>
-            <input
-              type="text"
+            <select
               id="register-locatario"
-              name="locatario"
-              placeholder="Locatário"
               oninput="this.setCustomValidity('')"
-            />
+            >
+              <option value="">Selecione um Locatário</option>
+            </select>
           </div>
           <div class="form-group">
-            <label for="register-data-locacao">Data de Locação</label>
+            <label for="register-data-entrega">Data de Entrega</label>
             <input
               type="date"
-              id="register-data-locacao"
-              name="dataLocacao"
-              placeholder="Data de Locação"
-              oninput="this.setCustomValidity('')"
-            />
-          </div>
-          <div class="form-group">
-            <label for="register-data-devolucao">Data de Devolução</label>
-            <input
-              type="date"
-              id="register-data-devolucao"
-              name="dataDevolucao"
-              placeholder="Data de Devolução"
+              id="register-data-entrega"
+              name="dataEntrega"
+              placeholder="Data de Entrega"
               oninput="this.setCustomValidity('')"
             />
           </div>
@@ -180,42 +165,23 @@
         <form id="form-atualizar">
           <div class="form-group">
             <label for="update-livro">Livro</label>
-            <input
-              type="text"
-              id="update-livro"
-              name="livro"
-              placeholder="Livro"
-              required
-            />
+            <select id="update-livro" oninput="this.setCustomValidity('')">
+              <option value="">Selecione um Livro</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="update-locatario">Locatário</label>
-            <input
-              type="text"
-              id="update-locatario"
-              name="locatario"
-              placeholder="Locatário"
-              required
-            />
+            <select id="update-locatario" oninput="this.setCustomValidity('')">
+              <option value="">Selecione um Locatário</option>
+            </select>
           </div>
           <div class="form-group">
-            <label for="update-data-locacao">Data de Locação</label>
+            <label for="update-data-entrega">Data de Entrega</label>
             <input
               type="date"
-              id="update-data-locacao"
-              name="dataLocacao"
-              placeholder="Data de Locação"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="update-data-devolucao">Data de Devolução</label>
-            <input
-              type="date"
-              id="update-data-devolucao"
-              name="dataDevolucao"
-              placeholder="Data de Devolução"
-              required
+              id="update-data-entrega"
+              name="dataEntrega"
+              placeholder="Data de Entrega"
             />
           </div>
           <div class="modal-actions">
@@ -261,7 +227,7 @@
         </button>
         <div class="modal-smaller-content">
           <span class="material-icons-outlined">check_circle</span>
-          <h3>Aluguel excluído!</h3>
+          <h3>Aluguel finalizado!</h3>
         </div>
       </div>
     </div>
@@ -271,7 +237,7 @@
           <span class="material-icons-outlined">close</span>
         </button>
         <div class="modal-smaller-content">
-          <h3>Você realmente deseja excluir esse aluguel?</h3>
+          <h3>Você realmente deseja finalizar esse aluguel?</h3>
           <div class="modal-actions">
             <button type="submit" class="btn-primary">Sim</button>
             <button type="button" class="btn-secondary">Cancelar</button>
@@ -279,6 +245,6 @@
         </div>
       </div>
     </div>
-    <script src="/js/alugueis.js"></script>
+    <script type="module" src="/js/alugueis.js"></script>
   </body>
 </html>

@@ -24,7 +24,6 @@
 
       <h1>Locadora de livros</h1>
 
-      <!-- Wrapper fora de #header-user -->
       <div class="profile-wrapper">
         <div id="header-user">
           <span id="profile-button" class="material-icons-outlined"
@@ -32,11 +31,11 @@
           >
         </div>
 
-        <!-- Modal fora de #header-user -->
         <div id="profile-modal">
-          <p class="name">João Silva</p>
-          <p class="email">joao@email.com</p>
-          <a href="/index.html" id="logout-button">Log Out</a>
+          <p class="name"></p>
+          <p class="email"></p>
+          <p class="role"></p>
+          <a id="logout-button">Log Out</a>
         </div>
       </div>
     </header>
@@ -98,7 +97,6 @@
               <tr>
                 <th>Nome</th>
                 <th>Email</th>
-                <th>Senha</th>
                 <th>Permissão</th>
                 <th>Ações</th>
               </tr>
@@ -124,7 +122,7 @@
         <button class="close-modal-btn" aria-label="Fechar">
           <span class="material-icons-outlined">close</span>
         </button>
-        <form id="form-cadastrar">
+        <form id="form-cadastrar" novalidate>
           <div class="form-group">
             <label for="register-name">Nome</label>
             <input
@@ -132,7 +130,7 @@
               id="register-name"
               name="name"
               placeholder="Nome"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -142,7 +140,7 @@
               id="register-email"
               name="email"
               placeholder="email@exemplo.com"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -152,18 +150,14 @@
               id="register-password"
               name="password"
               placeholder="********"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
             <label for="register-permission">Permissão</label>
-            <select
-              id="register-permission"
-              name="permission"
-              oninput="this.setCustomValidity('')"
-            >
-              <option value="usuario">Leitor</option>
-              <option value="editor">Editor</option>
+            <select id="register-permission" name="permission">
+              <option value="USER">Leitor</option>
+              <option value="ADMIN">Editor</option>
             </select>
           </div>
           <div class="modal-actions">
@@ -179,7 +173,7 @@
         <button class="close-modal-btn" aria-label="Fechar">
           <span class="material-icons-outlined">close</span>
         </button>
-        <form id="form-atualizar">
+        <form id="form-atualizar" novalidate>
           <div class="form-group">
             <label for="update-name">Nome</label>
             <input
@@ -187,7 +181,7 @@
               id="update-name"
               name="name"
               placeholder="Nome"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -197,7 +191,7 @@
               id="update-email"
               name="email"
               placeholder="email@exemplo.com"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -207,14 +201,14 @@
               id="update-password"
               name="password"
               placeholder="********"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
             <label for="update-permission">Permissão</label>
             <select id="update-permission" name="permission">
-              <option value="usuario">Leitor</option>
-              <option value="editor">Editor</option>
+              <option value="USER">Leitor</option>
+              <option value="ADMIN">Editor</option>
             </select>
           </div>
           <div class="modal-actions">
@@ -259,8 +253,8 @@
           <span class="material-icons-outlined">close</span>
         </button>
         <div class="modal-smaller-content">
-          <span class="material-icons-outlined">check_circle</span>
-          <h3>Usuário excluído!</h3>
+          <span id="icon_modal" class="material-icons-outlined"></span>
+          <h3 id="text_modal"></h3>
         </div>
       </div>
     </div>
@@ -278,6 +272,6 @@
         </div>
       </div>
     </div>
-    <script src="/js/usuarios.js"></script>
+    <script type="module" src="/js/usuarios.js"></script>
   </body>
 </html>

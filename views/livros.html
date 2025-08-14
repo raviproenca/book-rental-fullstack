@@ -34,9 +34,10 @@
 
         <!-- Modal fora de #header-user -->
         <div id="profile-modal">
-          <p class="name">João Silva</p>
-          <p class="email">joao@email.com</p>
-          <a href="/index.html" id="logout-button">Log Out</a>
+          <p class="name"></p>
+          <p class="email"></p>
+          <p class="role"></p>
+          <a id="logout-button">Log Out</a>
         </div>
       </div>
     </header>
@@ -100,6 +101,7 @@
                 <th>Editora</th>
                 <th>Lançamento</th>
                 <th>Estoque</th>
+                <th>Alugados</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -124,7 +126,7 @@
         <button class="close-modal-btn" aria-label="Fechar">
           <span class="material-icons-outlined">close</span>
         </button>
-        <form id="form-cadastrar">
+        <form id="form-cadastrar" novalidate>
           <div class="form-group">
             <label for="register-name">Nome</label>
             <input
@@ -132,7 +134,7 @@
               id="register-name"
               name="name"
               placeholder="Nome"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -142,18 +144,14 @@
               id="register-autor"
               name="autor"
               placeholder="Autor"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
             <label for="register-editora">Editora</label>
-            <input
-              type="text"
-              id="register-editora"
-              name="editora"
-              placeholder="Editora"
-              oninput="this.setCustomValidity('')"
-            />
+            <select id="register-editora">
+              <option value="">Selecione uma Editora</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="register-lancamento">Lançamento</label>
@@ -162,7 +160,7 @@
               id="register-lancamento"
               name="lancamento"
               placeholder="Data de lançamento"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -172,7 +170,7 @@
               id="register-estoque"
               name="estoque"
               placeholder="Estoque"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="modal-actions">
@@ -188,7 +186,7 @@
         <button class="close-modal-btn" aria-label="Fechar">
           <span class="material-icons-outlined">close</span>
         </button>
-        <form id="form-atualizar">
+        <form id="form-atualizar" novalidate>
           <div class="form-group">
             <label for="update-name">Nome</label>
             <input
@@ -196,7 +194,7 @@
               id="update-name"
               name="name"
               placeholder="Nome"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -206,18 +204,14 @@
               id="update-autor"
               name="autor"
               placeholder="Autor"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
             <label for="update-editora">Editora</label>
-            <input
-              type="text"
-              id="update-editora"
-              name="editora"
-              placeholder="Editora"
-              required
-            />
+            <select id="update-editora">
+              <option value="">Selecione uma Editora</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="update-lancamento">Lançamento</label>
@@ -226,7 +220,7 @@
               id="update-lancamento"
               name="lancamento"
               placeholder="Data de lançamento"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -236,7 +230,7 @@
               id="update-estoque"
               name="estoque"
               placeholder="Estoque"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="modal-actions">
@@ -280,8 +274,8 @@
           <span class="material-icons-outlined">close</span>
         </button>
         <div class="modal-smaller-content">
-          <span class="material-icons-outlined">check_circle</span>
-          <h3>Livro excluído!</h3>
+          <span id="icon_modal" class="material-icons-outlined"></span>
+          <h3 id="text_modal"></h3>
         </div>
       </div>
     </div>
@@ -299,6 +293,6 @@
         </div>
       </div>
     </div>
-    <script src="/js/livros.js"></script>
+    <script type="module" src="/js/livros.js"></script>
   </body>
 </html>

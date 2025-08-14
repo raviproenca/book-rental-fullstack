@@ -1,4 +1,111 @@
-document.addEventListener("DOMContentLoaded", () => {
+import {
+  fetchMoreRented,
+  fetchInTime,
+  fetchWithDelay,
+  fetchRentsLate,
+  fetchPerRenter,
+  fetchRentsQuantity,
+} from "/services/dashboardService.js";
+
+const selectLocatario = document.getElementById("register-locatario");
+const toggleNav = document.getElementById("toggle-nav");
+const nav = document.getElementById("navbar");
+const profileButton = document.getElementById("profile-button");
+const profileModal = document.getElementById("profile-modal");
+const name = document.querySelector(".name");
+const email = document.querySelector(".email");
+const role = document.querySelector(".role");
+const logoutButton = document.getElementById("logout-button");
+
+let locatariosDisponiveis = [];
+let livrosMaisAlugados = [];
+
+const getRole = () => localStorage.getItem("roleUser");
+
+const renderLocatariosNoSelect = (selectElement) => {
+  selectElement.innerHTML = `<option>selecione</option>`;
+  locatariosDisponiveis.forEach((locatario) => {
+    const option = document.createElement("option");
+    option.value = locatario.name;
+    option.textContent = locatario.name;
+    selectElement.appendChild(option);
+  });
+};
+
+const carregarLocatarios = async () => {
+  try {
+    locatariosDisponiveis = await fetchPerRenter();
+    renderLocatariosNoSelect(selectLocatario);
+  } catch (error) {
+    console.error("Erro ao carregar locatários:", error);
+  }
+};
+
+const carregarLivros = async () => {
+  try {
+    livrosMaisAlugados = await fetchMoreRented(12);
+  } catch (error) {
+    console.error("Erro ao carregar livros:", error);
+  }
+};
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await carregarLivros();
+  await carregarLocatarios();
+
+  name.textContent = localStorage.getItem("nameUser");
+  email.textContent = localStorage.getItem("emailUser");
+  getRole() === "ADMIN"
+    ? (role.textContent = "Usuário Editor")
+    : (role.textContent = "Usuário Leitor");
+
+  logoutButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    localStorage.removeItem("token");
+    localStorage.removeItem("nameUser");
+    localStorage.removeItem("emailUser");
+    localStorage.removeItem("roleUser");
+    window.location.href = "/index.html";
+  });
+
+  document.getElementById("mais-alugado").textContent =
+    livrosMaisAlugados[0].name;
+  document.getElementById("segundo-mais-alugado").textContent =
+    livrosMaisAlugados[1].name;
+  document.getElementById("terceiro-mais-alugado").textContent =
+    livrosMaisAlugados[2].name;
+
+  document.getElementById(
+    "mais-alugado-number"
+  ).textContent = `${livrosMaisAlugados[0].totalRents}x`;
+  document.getElementById(
+    "segundo-mais-alugado-number"
+  ).textContent = `${livrosMaisAlugados[1].totalRents}x`;
+  document.getElementById(
+    "terceiro-mais-alugado-number"
+  ).textContent = `${livrosMaisAlugados[2].totalRents}x`;
+
+  document.getElementById("emprestado-number").textContent =
+    await fetchRentsQuantity(1);
+  document.getElementById("atrasado-number").textContent = await fetchRentsLate(
+    1
+  );
+
+  const UmAnoNoPrazo = await fetchInTime(2);
+  const DoisAnosNoPrazo = await fetchInTime(4);
+  const TresAnosNoPrazo = await fetchInTime(7);
+  const QuatroAnosNoPrazo = await fetchInTime(10);
+  const CincoAnosNoPrazo = await fetchInTime(12);
+
+  const UmAnoForaPrazo = await fetchWithDelay(2);
+  const DoisAnosForaPrazo = await fetchWithDelay(4);
+  const TresAnosForaPrazo = await fetchWithDelay(7);
+  const QuatroAnosForaPrazo = await fetchWithDelay(10);
+  const CincoAnosForaPrazo = await fetchWithDelay(12);
+
+  const totalDentroPrazo = await fetchInTime(99);
+  const totalForaPrazo = await fetchWithDelay(99);
+
   const ctxLocatariosPie = document
     .getElementById("locatarios-chart-pie")
     .getContext("2d");
@@ -12,30 +119,55 @@ document.addEventListener("DOMContentLoaded", () => {
   const purple = "#9B59B6";
   const cyan = "#4ECDC4";
 
-  const dentroPrazo = [25, 30, 18, 28, 35];
-  const foraPrazo = [5, 7, 4, 6, 3];
+  const dentroPrazo = [
+    UmAnoNoPrazo,
+    DoisAnosNoPrazo - UmAnoNoPrazo,
+    TresAnosNoPrazo - DoisAnosNoPrazo,
+    QuatroAnosNoPrazo - TresAnosNoPrazo,
+    CincoAnosNoPrazo - QuatroAnosNoPrazo,
+  ];
+
+  const foraPrazo = [
+    UmAnoForaPrazo,
+    DoisAnosForaPrazo - UmAnoForaPrazo,
+    TresAnosForaPrazo - DoisAnosForaPrazo,
+    QuatroAnosForaPrazo - TresAnosForaPrazo,
+    CincoAnosForaPrazo - QuatroAnosForaPrazo,
+  ];
 
   const mediaQuery = window.matchMedia("(max-width: 480px)");
   const isMobile = mediaQuery.matches;
   const dynamicFontSize = isMobile ? 11 : 14;
   const dynamicPadding = isMobile ? 10 : 20;
 
+  let locatarioChart = null;
+
+  selectLocatario.addEventListener("change", (event) => {
+    const nomeSelecionado = event.target.value;
+    const locatario = locatariosDisponiveis.find(
+      (l) => l.name === nomeSelecionado
+    );
+
+    if (locatarioChart) {
+      locatarioChart.data.datasets[0].data = [
+        locatario.rentsActive,
+        locatario.rentsQuantity,
+      ];
+      locatarioChart.update();
+    }
+  });
+
   // === DOUGHNUT CHART ===
-  new Chart(ctxLocatariosPie, {
+  locatarioChart = new Chart(ctxLocatariosPie, {
     type: "doughnut",
     data: {
-      labels: [
-        "Livros alugados",
-        "Aluguéis realizados",
-        "Livros devolvidos no prazo",
-        "Livros devolvidos com atraso",
-      ],
+      labels: ["Livros alugados no momento", "Total de aluguéis realizados"],
       datasets: [
         {
           label: "Status dos Livros",
-          data: [37, 29, 58, 11],
-          backgroundColor: [orange, limeGreen, purple, cyan],
-          borderColor: [orange, limeGreen, purple, cyan],
+          data: [1, 1],
+          backgroundColor: [limeGreen, purple],
+          borderColor: [limeGreen, purple],
           borderWidth: 1,
         },
       ],
@@ -87,14 +219,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // === BAR CHART COMPARATIVO ===
   let chartInstance;
 
-  function createChart(isMobile) {
+  const createChart = async (isMobile) => {
     if (chartInstance) chartInstance.destroy();
 
     const fontSize = isMobile ? 10 : 14;
     const titleFontSize = isMobile ? 12 : 16;
     const paddingMobile = isMobile ? 25 : 15;
-    const totalDentro = dentroPrazo.reduce((a, b) => a + b, 0);
-    const totalFora = foraPrazo.reduce((a, b) => a + b, 0);
 
     chartInstance = new Chart(ctxLivrosBar, {
       type: "bar",
@@ -139,12 +269,18 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           tooltip: {
             callbacks: {
-              label: (context) => `${context.dataset.label}: ${context.parsed}`,
+              label: (context) => {
+                const value =
+                  context.chart.options.indexAxis === "y"
+                    ? context.parsed.x
+                    : context.parsed.y;
+                return `${context.dataset.label}: ${value}`;
+              },
             },
           },
           subtitle: {
             display: true,
-            text: `Livros devolvidos no prazo: ${totalDentro}    |    Devolvidos com atraso: ${totalFora}`,
+            text: `Total devolvidos no prazo: ${totalDentroPrazo}    |    Devolvidos com atraso: ${totalForaPrazo}`,
             color: "#fff",
             font: {
               size: titleFontSize,
@@ -183,30 +319,23 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       plugins: [ChartDataLabels],
     });
-  }
+  };
 
-  createChart(isMobile);
-  mediaQuery.addEventListener("change", (e) => {
-    createChart(e.matches);
-    location.reload();
+  await createChart(isMobile);
+  mediaQuery.addEventListener("change", async (e) => {
+    await createChart(e.matches);
   });
 
-  const toggleNav = document.getElementById("toggle-nav");
-  const nav = document.getElementById("navbar");
   toggleNav.addEventListener("click", (e) => {
-    e.stopPropagation(); // impede propagação para o documento
+    e.stopPropagation();
     nav.classList.toggle("active");
   });
 
-  // Fecha navbar ao clicar fora
   document.addEventListener("click", (e) => {
     if (nav.classList.contains("active") && !nav.contains(e.target)) {
       nav.classList.remove("active");
     }
   });
-
-  const profileButton = document.getElementById("profile-button");
-  const profileModal = document.getElementById("profile-modal");
 
   profileButton.addEventListener("click", () => {
     profileModal.classList.toggle("visible");

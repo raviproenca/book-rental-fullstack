@@ -1,34 +1,83 @@
+import { login } from "/services/indexService";
+
 const formLogin = document.getElementById("form-login");
 
-formLogin.addEventListener("submit", (event) => {
-  if (!formLogin.checkValidity()) return;
+const registerEmailInput = document.getElementById("login-email");
+const registerPasswordInput = document.getElementById("login-password");
+
+registerEmailInput.addEventListener("input", () => {
+  if (
+    registerEmailInput.validity.typeMismatch ||
+    registerEmailInput.value.trim().length < 7 ||
+    registerEmailInput.value.trim().length > 50
+  ) {
+    registerEmailInput.setCustomValidity("Por favor, insira um email válido.");
+  } else {
+    registerEmailInput.setCustomValidity("");
+  }
+});
+
+registerPasswordInput.addEventListener("input", () => {
+  if (registerPasswordInput.value.trim().length < 8) {
+    registerPasswordInput.setCustomValidity(
+      "A senha deve possui no mínimo 8 dígitos"
+    );
+  } else if (registerPasswordInput.value.trim().length > 30) {
+    registerPasswordInput.setCustomValidity(
+      "Por favor, insira uma senha válida."
+    );
+  } else {
+    registerPasswordInput.setCustomValidity("");
+  }
+});
+
+formLogin.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const nomeInput = document.getElementById("login-name");
-  const emailInput = document.getElementById("login-email");
-  const senhaInput = document.getElementById("login-password");
-
-  const nome = nomeInput.value.trim();
-  const email = emailInput.value.trim();
-  const senha = senhaInput.value.trim();
-
-  if (nome === "") {
-    nomeInput.setCustomValidity("O nome é obrigatório.");
-    nomeInput.reportValidity();
+  if (!registerEmailInput.value.trim()) {
+    registerEmailInput.setCustomValidity("O email é obrigatório.");
+    registerEmailInput.reportValidity();
     return;
   }
 
-  if (email === "") {
-    emailInput.setCustomValidity("O email é obrigatório.");
-    emailInput.reportValidity();
+  if (!registerPasswordInput.value.trim()) {
+    registerPasswordInput.setCustomValidity("A senha é obrigatória.");
+    registerPasswordInput.reportValidity();
     return;
   }
 
-  if (senha === "") {
-    senhaInput.setCustomValidity("A senha é obrigatória.");
-    senhaInput.reportValidity();
+  if (
+    registerEmailInput.validity.typeMismatch ||
+    registerEmailInput.value.trim().length < 7 ||
+    registerEmailInput.value.trim().length > 50
+  ) {
+    registerEmailInput.setCustomValidity("Por favor, insira um email válido.");
+    registerEmailInput.reportValidity();
     return;
   }
 
-  window.location.href = "/views/dashboard.html";
+  if (registerPasswordInput.value.trim().length < 8) {
+    registerPasswordInput.setCustomValidity(
+      "A senha deve possui no mínimo 8 dígitos"
+    );
+  } else if (registerPasswordInput.value.trim().length > 30) {
+    registerPasswordInput.setCustomValidity(
+      "Por favor, insira uma senha válida."
+    );
+    registerPasswordInput.reportValidity();
+    return;
+  }
+
+  const loginData = {
+    email: registerEmailInput.value.trim(),
+    password: registerPasswordInput.value.trim(),
+  };
+
+  try {
+    await login(loginData);
+    window.location.href = "/views/usuarios.html";
+  } catch (error) {
+    console.error("Erro ao fazer login:", error);
+    alert(error.message || "Erro ao fazer login.");
+  }
 });

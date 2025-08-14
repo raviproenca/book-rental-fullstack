@@ -34,9 +34,10 @@
 
         <!-- Modal fora de #header-user -->
         <div id="profile-modal">
-          <p class="name">João Silva</p>
-          <p class="email">joao@email.com</p>
-          <a href="/index.html" id="logout-button">Log Out</a>
+          <p class="name"></p>
+          <p class="email"></p>
+          <p class="role"></p>
+          <a id="logout-button">Log Out</a>
         </div>
       </div>
     </header>
@@ -136,7 +137,7 @@
               id="register-name"
               name="name"
               placeholder="Nome"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -146,7 +147,7 @@
               id="register-email"
               name="email"
               placeholder="email@exemplo.com"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -156,7 +157,7 @@
               id="register-celular"
               name="celular"
               placeholder="88 88888-8888"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -166,7 +167,7 @@
               id="register-endereco"
               name="endereco"
               placeholder="Endereço completo"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -176,7 +177,7 @@
               id="register-cpf"
               name="cpf"
               placeholder="CPF"
-              oninput="this.setCustomValidity('')"
+              autocomplete="off"
             />
           </div>
           <div class="modal-actions">
@@ -200,7 +201,7 @@
               id="update-name"
               name="name"
               placeholder="Nome"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -210,7 +211,7 @@
               id="update-email"
               name="email"
               placeholder="email@exemplo.com"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -220,7 +221,7 @@
               id="update-celular"
               name="celular"
               placeholder="88 88888-8888"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -230,7 +231,7 @@
               id="update-endereco"
               name="endereco"
               placeholder="Endereço completo"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="form-group">
@@ -240,7 +241,7 @@
               id="update-cpf"
               name="cpf"
               placeholder="CPF"
-              required
+              autocomplete="off"
             />
           </div>
           <div class="modal-actions">
@@ -285,8 +286,8 @@
           <span class="material-icons-outlined">close</span>
         </button>
         <div class="modal-smaller-content">
-          <span class="material-icons-outlined">check_circle</span>
-          <h3>Locatário excluído!</h3>
+          <span id="icon_modal" class="material-icons-outlined"></span>
+          <h3 id="text_modal"></h3>
         </div>
       </div>
     </div>
@@ -304,6 +305,6 @@
         </div>
       </div>
     </div>
-    <script src="/js/locatarios.js"></script>
+    <script type="module" src="/js/locatarios.js"></script>
   </body>
 </html>
