@@ -239,6 +239,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   searchInput.addEventListener("input", () => {
     const searchTerm = searchInput.value.toLowerCase().trim();
     const filteredAlugueis = todosOsAlugueis.filter((aluguel) => {
+      const statusFormatted =
+        aluguel.status === "LATE"
+          ? "Atrasado"
+          : aluguel.status === "DELIVERED_WITH_DELAY"
+          ? "Devolvido com atraso"
+          : aluguel.status === "IN_TIME"
+          ? "Devolvido no prazo"
+          : "Em dia";
       const rentDateFormatted = new Date(aluguel.rentDate).toLocaleDateString(
         "pt-BR",
         { timeZone: "UTC" }
@@ -252,7 +260,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         aluguel.book.name.toLowerCase().includes(searchTerm) ||
         aluguel.renter.name.toLowerCase().includes(searchTerm) ||
         rentDateFormatted.includes(searchTerm) ||
-        devolutionDateFormatted.includes(searchTerm)
+        devolutionDateFormatted.includes(searchTerm) ||
+        statusFormatted.toLowerCase().includes(searchTerm)
       );
     });
     paginaAtual = 1;

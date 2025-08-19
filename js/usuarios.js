@@ -185,10 +185,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   searchInput.addEventListener("input", () => {
     const searchTerm = searchInput.value.toLowerCase().trim();
     const filteredUsers = todosOsUsuarios.filter((user) => {
+      const roleFormatted =
+        user.role === "ADMIN" ? "Usuário Editor" : "Usuário Leitor";
       return (
         user.name.toLowerCase().includes(searchTerm) ||
         user.email.toLowerCase().includes(searchTerm) ||
-        user.role.toLowerCase().includes(searchTerm)
+        roleFormatted.toLowerCase().includes(searchTerm)
       );
     });
     paginaAtual = 1;
@@ -520,9 +522,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (editBtn) {
       if (getRole() !== "ADMIN") return;
 
-      const userId = parseInt(editBtn.dataset.id, 10);
-      idUsuarioEditando = userId;
-      const userToEdit = todosOsUsuarios.find((u) => u.id === userId);
+      idUsuarioEditando = parseInt(editBtn.dataset.id, 10);
+      const userToEdit = todosOsUsuarios.find(
+        (u) => u.id === idUsuarioEditando
+      );
+
+      const usuarioLogin = todosOsUsuarios.find(
+        (u) => u.email === localStorage.getItem("loginEmail")
+      );
+
+      if (usuarioLogin.id === idUsuarioEditando) {
+        iconModal.style.color = "red";
+        iconModal.textContent = "cancel";
+        textModal.textContent = "Você não pode se editar.";
+        openModal(modalDeletando);
+        return;
+      }
+
       if (userToEdit) {
         updateNameInput.value = userToEdit.name;
         updateEmailInput.value = userToEdit.email;
