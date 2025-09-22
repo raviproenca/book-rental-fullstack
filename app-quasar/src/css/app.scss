@@ -1,0 +1,52 @@
+.background-color {
+  background: linear-gradient(to left, #2aa9b5 35%, #c4faff);
+}
+
+.background-color2 {
+  background: linear-gradient(to top left, #55bfc9, #16696d);
+}
+
+.modal-color {
+  background: linear-gradient(to left, #006670, #00a1b1);
+}
+
+.header-color {
+  background: linear-gradient(to right, #004147, #009ead);
+}
+
+.dashboard-cards {
+  background: linear-gradient(to top left, #004147, #16696d);
+}
+
+.nav-color {
+  background-color: #004147;
+}
+
+.text-with-shadow {
+  text-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.border-radius {
+  border-radius: 15px;
+}
+
+.primeiro-mais-alugado {
+  background: linear-gradient(145deg, #b38728, #fbf5b7, #d4af37);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.segundo-mais-alugado {
+  background: linear-gradient(145deg, #a0a0a0, #ffffff, #c0c0c0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.terceiro-mais-alugado {
+  background: linear-gradient(145deg, #8c480e, #e0a467, #cd7f32);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

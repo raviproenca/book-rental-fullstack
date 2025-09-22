@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Locatários</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/style.css" />
+  </head>
+  <body>
+    <header>
+      <div id="toggle-nav">
+        <span class="material-icons-outlined">dehaze</span>
+      </div>
+
+      <h1>Locadora de livros</h1>
+
+      <!-- Wrapper fora de #header-user -->
+      <div class="profile-wrapper">
+        <div id="header-user">
+          <span id="profile-button" class="material-icons-outlined"
+            >person</span
+          >
+        </div>
+
+        <!-- Modal fora de #header-user -->
+        <div id="profile-modal">
+          <p class="name"></p>
+          <p class="email"></p>
+          <p class="role"></p>
+          <a id="logout-button">Log Out</a>
+        </div>
+      </div>
+    </header>
+    <nav id="navbar">
+      <img src="/assets/images/WDA GROUP LOGO.png" alt="" />
+      <ul>
+        <li>
+          <a href="dashboard.html" class="nav-item" data-title="Relatório geral"
+            ><span class="material-icons-outlined">grid_view</span> Relatório
+            geral</a
+          >
+        </li>
+        <li>
+          <a href="usuarios.html" class="nav-item" data-title="Usuários"
+            ><span class="material-icons-outlined">group</span> Usuários</a
+          >
+        </li>
+        <li>
+          <a href="editoras.html" class="nav-item" data-title="Editoras"
+            ><span class="material-icons-outlined">import_contacts</span>
+            Editoras</a
+          >
+        </li>
+        <li>
+          <a href="livros.html" class="nav-item" data-title="Livros"
+            ><span class="material-icons-outlined">library_books</span>
+            Livros</a
+          >
+        </li>
+        <li>
+          <a href="#" class="nav-item active" data-title="Locatários"
+            ><span class="material-icons-outlined">person_add</span>
+            Locatários</a
+          >
+        </li>
+        <li>
+          <a href="alugueis.html" class="nav-item" data-title="Aluguéis"
+            ><span class="material-icons-outlined">bookmark</span> Aluguéis</a
+          >
+        </li>
+      </ul>
+    </nav>
+    <main>
+      <section>
+        <div id="users-div">
+          <h2>Locatários</h2>
+          <div id="search-div">
+            <span class="material-icons-outlined">dehaze</span>
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Buscar locatário"
+            />
+            <span id="search-button" class="material-icons-outlined"
+              >search</span
+            >
+          </div>
+          <div class="mobile-sort-controls">
+            <label for="sort-select">Ordenar por:</label>
+            <select id="sort-select">
+              <option value="name">Nome</option>
+              <option value="email">Email</option>
+              <option value="address">Endereço</option>
+            </select>
+            <button id="sort-direction-toggle" title="Alternar direção">
+              <span class="material-icons-outlined">arrow_upward</span>
+            </button>
+          </div>
+        </div>
+        <div id="table-container">
+          <table id="users-table">
+            <thead>
+              <tr>
+                <th data-key="name"><span>Nome</span></th>
+                <th data-key="email"><span>Email</span></th>
+                <th>Celular</th>
+                <th data-key="address"><span>Endereço</span></th>
+                <th>CPF</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <p id="mensagem-erro">Nenhum locatário foi encontrado.</p>
+          <div id="pagination"></div>
+        </div>
+        <div id="add-user-div">
+          <button id="add-user-btn">
+            <span class="material-icons-outlined">add_circle_outline</span>
+            Cadastrar novo locatário
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <div id="modal-overlay" class="modal-overlay"></div>
+
+    <div id="modal-cadastrar" class="modal">
+      <div class="modal-content">
+        <button class="close-modal-btn" aria-label="Fechar">
+          <span class="material-icons-outlined">close</span>
+        </button>
+        <form id="form-cadastrar">
+          <div class="form-group">
+            <label for="register-name">Nome</label>
+            <input
+              type="text"
+              id="register-name"
+              name="name"
+              placeholder="Nome"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="register-email">Email</label>
+            <input
+              type="email"
+              id="register-email"
+              name="email"
+              placeholder="email@exemplo.com"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="register-celular">Celular</label>
+            <input
+              type="tel"
+              id="register-celular"
+              name="celular"
+              placeholder="88 88888-8888"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="register-endereco">Endereço</label>
+            <input
+              type="text"
+              id="register-endereco"
+              name="endereco"
+              placeholder="Endereço completo"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="register-cpf">CPF</label>
+            <input
+              type="text"
+              id="register-cpf"
+              name="cpf"
+              placeholder="CPF"
+              autocomplete="off"
+            />
+          </div>
+          <div class="modal-actions">
+            <button type="submit" class="btn-primary">Cadastrar</button>
+            <button type="button" class="btn-secondary">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="modal-atualizar" class="modal">
+      <div class="modal-content">
+        <button class="close-modal-btn" aria-label="Fechar">
+          <span class="material-icons-outlined">close</span>
+        </button>
+        <form id="form-atualizar">
+          <div class="form-group">
+            <label for="update-name">Nome</label>
+            <input
+              type="text"
+              id="update-name"
+              name="name"
+              placeholder="Nome"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="update-email">Email</label>
+            <input
+              type="email"
+              id="update-email"
+              name="email"
+              placeholder="email@exemplo.com"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="update-celular">Celular</label>
+            <input
+              type="tel"
+              id="update-celular"
+              name="celular"
+              placeholder="88 88888-8888"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="update-endereco">Endereço</label>
+            <input
+              type="text"
+              id="update-endereco"
+              name="endereco"
+              placeholder="Endereço completo"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="update-cpf">CPF</label>
+            <input
+              type="text"
+              id="update-cpf"
+              name="cpf"
+              placeholder="CPF"
+              autocomplete="off"
+            />
+          </div>
+          <div class="modal-actions">
+            <button
+              type="submit"
+              id="btn-primary-atualizar"
+              class="btn-primary"
+            >
+              Atualizar
+            </button>
+            <button type="button" class="btn-secondary">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="modal-cadastrando" class="modal">
+      <div class="modal-content">
+        <button class="close-modal-btn" aria-label="Fechar">
+          <span class="material-icons-outlined">close</span>
+        </button>
+        <div class="modal-smaller-content">
+          <span class="material-icons-outlined">check_circle</span>
+          <h3>Locatário cadastrado!</h3>
+        </div>
+      </div>
+    </div>
+    <div id="modal-atualizando" class="modal">
+      <div class="modal-content">
+        <button class="close-modal-btn" aria-label="Fechar">
+          <span class="material-icons-outlined">close</span>
+        </button>
+        <div class="modal-smaller-content">
+          <span class="material-icons-outlined">check_circle</span>
+          <h3>Locatário atualizado!</h3>
+        </div>
+      </div>
+    </div>
+    <div id="modal-deletando" class="modal">
+      <div class="modal-content">
+        <button class="close-modal-btn" aria-label="Fechar">
+          <span class="material-icons-outlined">close</span>
+        </button>
+        <div class="modal-smaller-content">
+          <span id="icon_modal" class="material-icons-outlined"></span>
+          <h3 id="text_modal"></h3>
+        </div>
+      </div>
+    </div>
+    <div id="modal-confirmando" class="modal">
+      <div class="modal-content">
+        <button class="close-modal-btn" aria-label="Fechar">
+          <span class="material-icons-outlined">close</span>
+        </button>
+        <div class="modal-smaller-content">
+          <h3>Você realmente deseja excluir esse locatário?</h3>
+          <div class="modal-actions">
+            <button type="submit" class="btn-primary">Sim</button>
+            <button type="button" class="btn-secondary">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/js/locatarios.js"></script>
+  </body>
+</html>
