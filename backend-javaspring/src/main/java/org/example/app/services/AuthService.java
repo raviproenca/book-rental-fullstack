@@ -19,7 +19,7 @@ public class AuthService {
         UserEntity userEntity = authRepository.findByEmail(login.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuário com o email " + login.getEmail() + " não encontrado."));
 
-        if (!passwordEncoder.matches(login.getPassword(), userEntity.getPassword())) {
+        if (!passwordEncoder.matches(login.getPassword(), userEntity.getPasswordHash())) {
             throw new RuntimeException("Senha inválida");
         }
 
