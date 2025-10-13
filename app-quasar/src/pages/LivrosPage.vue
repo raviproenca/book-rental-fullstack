@@ -23,7 +23,7 @@ const booksth = computed(() => [
   {
     name: 'publisher',
     label: t('common.publisher'),
-    field: 'publisher',
+    field: (row) => row.publisher.name,
     apiKey: 'publisherId',
     align: 'center',
     sortable: true,

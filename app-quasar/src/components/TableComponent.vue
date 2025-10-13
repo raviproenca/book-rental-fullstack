@@ -1,6 +1,6 @@
 <template>
   <q-page padding class="column items-center justify-center">
-    <div class="q-pa-md" style="width: 100%; max-width: 1200px">
+    <div class="q-pa-md" style="width: 100%; max-width: 1300px">
       <h4 class="text-white text-center text-weight-bold text-with-shadow q-mt-md q-mb-lg lt-md">
         <slot></slot>
       </h4>

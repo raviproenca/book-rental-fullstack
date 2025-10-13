@@ -65,7 +65,7 @@
               dark
               color="amber-1"
               v-model="localRow[column.field]"
-              :options="books"
+              :options="allowedBooks"
               :rules="getRulesFor(column)"
               lazy-rules
               option-value="id"
@@ -260,6 +260,10 @@ const { books } = storeToRefs(booksStore)
 
 const rentersStore = useRentersStore()
 const { renters } = storeToRefs(rentersStore)
+
+const allowedBooks = computed(() => {
+  return books.value.filter((book) => book.totalQuantity > 0)
+})
 
 onMounted(() => {
   if (props.area === 'books') {
