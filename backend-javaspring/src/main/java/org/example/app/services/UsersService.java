@@ -1,7 +1,6 @@
 package org.example.app.services;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.example.app.models.dtos.UserDTO;
 import org.example.app.models.entities.UserEntity;
 import org.example.app.models.entities.UserRole;
