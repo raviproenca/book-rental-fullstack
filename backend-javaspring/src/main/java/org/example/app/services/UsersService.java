@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.app.models.dtos.UserDTO;
 import org.example.app.models.entities.UserEntity;
 import org.example.app.models.entities.UserRole;
-import org.example.app.repositories.AuthRepository;
+import org.example.app.repositories.AuthUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsersService {
 
-    private final AuthRepository authRepository;
+    private final AuthUserRepository authUserRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UserEntity registerService(UserDTO register) {
-        if (authRepository.findByEmail(register.getEmail()).isPresent()) {
+        if (authUserRepository.findByEmail(register.getEmail()).isPresent()) {
             throw new RuntimeException("Email is already in use.");
         }
 
@@ -33,6 +33,6 @@ public class UsersService {
         }
 
 
-        return authRepository.save(newUser);
+        return authUserRepository.save(newUser);
     }
 }
