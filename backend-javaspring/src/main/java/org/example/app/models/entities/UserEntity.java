@@ -2,6 +2,7 @@ package org.example.app.models.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.example.app.models.enums.UserRole;
 
 @Entity
 @Data

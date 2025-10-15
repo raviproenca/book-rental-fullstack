@@ -1,4 +1,4 @@
-package org.example.app.models.entities;
+package org.example.app.models.enums;
 
 public enum UserRole {
     ADMIN,

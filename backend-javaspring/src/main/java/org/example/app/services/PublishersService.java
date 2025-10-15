@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.app.models.dtos.PublisherDTO;
 import org.example.app.models.entities.PublisherEntity;
 import org.example.app.repositories.PublisherRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -11,19 +12,14 @@ import org.springframework.stereotype.Service;
 public class PublishersService {
 
     private final PublisherRepository publisherRepository;
+    private static final ModelMapper modelMapper = new ModelMapper();
 
     public PublisherEntity registerService(PublisherDTO register) {
         if (publisherRepository.findByEmail(register.getEmail()).isPresent()) {
             throw new RuntimeException("Email is already in use");
         }
 
-        PublisherEntity entity = new PublisherEntity();
-        entity.setName(register.getName());
-        entity.setEmail(register.getEmail());
-        entity.setTelephone(register.getTelephone());
-        if (Boolean.parseBoolean(register.getSite())) {
-            entity.setSite(register.getSite());
-        }
+        PublisherEntity entity = modelMapper.map(register, PublisherEntity.class);
 
         return publisherRepository.save(entity);
     }

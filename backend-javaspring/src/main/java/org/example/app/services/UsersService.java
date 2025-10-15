@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.app.models.dtos.AuthDTO;
 import org.example.app.models.dtos.UserDTO;
 import org.example.app.models.entities.UserEntity;
-import org.example.app.models.entities.UserRole;
+import org.example.app.models.enums.UserRole;
 import org.example.app.repositories.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ public class UsersService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private static final ModelMapper modelMapper = new ModelMapper();
 
     public UserEntity loginService(AuthDTO login) {
         UserEntity userEntity = userRepository.findByEmail(login.getEmail())
@@ -32,9 +34,8 @@ public class UsersService {
             throw new RuntimeException("Esse email já está em uso.");
         }
 
-        UserEntity newUser = new UserEntity();
+        UserEntity newUser = modelMapper.map(register, UserEntity.class);
 
-        newUser.setEmail(register.getEmail());
         newUser.setPassword(passwordEncoder.encode(register.getPassword()));
 
         try {
