@@ -9,4 +9,14 @@ public class BookSpecifications {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("name"), name);
     }
+
+    public static Specification<BookEntity> hasAuthor(String author) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("author"), author);
+    }
+
+    public static Specification<BookEntity> isAvailable() {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.greaterThan(root.get("totalInUse"), 0);
+    }
 }
