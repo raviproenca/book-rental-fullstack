@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class PublishersService {
 
     private final PublisherRepository publisherRepository;
-    private static final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
     public PublisherEntity registerService(PublisherDTO register) {
         if (publisherRepository.findByEmail(register.getEmail()).isPresent()) {

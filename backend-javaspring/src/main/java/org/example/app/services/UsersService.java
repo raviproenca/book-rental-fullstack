@@ -16,7 +16,7 @@ public class UsersService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private static final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
     public UserEntity loginService(AuthDTO login) {
         UserEntity userEntity = userRepository.findByEmail(login.getEmail())
