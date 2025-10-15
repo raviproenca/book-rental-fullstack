@@ -12,4 +12,19 @@ public class RenterEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
+    private String name;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String telephone;
+
+    @Column(nullable = false)
+    private String address;
+
+    @Column(unique = true, nullable = false)
+    private String cpf;
+
 }
