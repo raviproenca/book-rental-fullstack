@@ -1,7 +1,7 @@
 package org.example.app.services;
 
 import lombok.RequiredArgsConstructor;
-import org.example.app.models.dtos.PublisherDTO;
+import org.example.app.models.requests.PublisherRequestDTO;
 import org.example.app.models.entities.PublisherEntity;
 import org.example.app.repositories.PublisherRepository;
 import org.modelmapper.ModelMapper;
@@ -14,7 +14,7 @@ public class PublishersService {
     private final PublisherRepository publisherRepository;
     private final ModelMapper modelMapper;
 
-    public PublisherEntity registerService(PublisherDTO register) {
+    public PublisherEntity registerService(PublisherRequestDTO register) {
         if (publisherRepository.findByEmail(register.getEmail()).isPresent()) {
             throw new RuntimeException("Email is already in use");
         }

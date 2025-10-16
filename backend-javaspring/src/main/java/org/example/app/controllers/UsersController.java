@@ -1,6 +1,6 @@
 package org.example.app.controllers;
 
-import org.example.app.models.dtos.UserDTO;
+import org.example.app.models.requests.UserRequestDTO;
 import org.example.app.models.entities.UserEntity;
 import org.example.app.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class UsersController {
     private UsersService service;
 
     @PostMapping("/register")
-    public UserEntity RegisterController(@RequestBody UserDTO request) {
+    public UserEntity RegisterController(@RequestBody UserRequestDTO request) {
         return service.registerService(request);
     }
 }

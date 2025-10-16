@@ -1,9 +1,9 @@
-package org.example.app.models.dtos;
+package org.example.app.models.requests;
 
 import lombok.Data;
 
 @Data
-public class AuthDTO {
+public class AuthRequestDTO {
     private String email;
     private String password;
 }

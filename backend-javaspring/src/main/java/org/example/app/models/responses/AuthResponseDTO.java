@@ -1,11 +1,11 @@
-package org.example.app.models.dtos;
+package org.example.app.models.responses;
 
 import lombok.Data;
 
 @Data
-public class UserDTO {
+public class AuthResponseDTO {
     private String name;
     private String email;
-    private String password;
     private String role;
+    private String token;
 }

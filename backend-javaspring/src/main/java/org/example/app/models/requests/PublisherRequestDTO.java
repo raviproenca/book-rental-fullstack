@@ -1,9 +1,9 @@
-package org.example.app.models.dtos;
+package org.example.app.models.requests;
 
 import lombok.Data;
 
 @Data
-public class PublisherDTO {
+public class PublisherRequestDTO {
     private String name;
     private String email;
     private String telephone;

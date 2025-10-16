@@ -1,6 +1,6 @@
 package org.example.app.controllers;
 
-import org.example.app.models.dtos.AuthDTO;
+import org.example.app.models.requests.AuthRequestDTO;
 import org.example.app.models.entities.UserEntity;
 import org.example.app.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class AuthController {
     private UsersService service;
 
     @PostMapping("/login")
-    public UserEntity LoginController(@RequestBody AuthDTO request) {
+    public UserEntity LoginController(@RequestBody AuthRequestDTO request) {
         return service.loginService(request);
     }
 

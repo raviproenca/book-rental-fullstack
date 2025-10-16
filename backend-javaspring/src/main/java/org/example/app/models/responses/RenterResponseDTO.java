@@ -1,9 +1,10 @@
-package org.example.app.models.dtos;
+package org.example.app.models.responses;
 
 import lombok.Data;
 
 @Data
-public class RenterDTO {
+public class RenterResponseDTO {
+    private Long id;
     private String name;
     private String email;
     private String telephone;

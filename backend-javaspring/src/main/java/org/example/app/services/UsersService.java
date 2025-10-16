@@ -1,8 +1,8 @@
 package org.example.app.services;
 
 import lombok.RequiredArgsConstructor;
-import org.example.app.models.dtos.AuthDTO;
-import org.example.app.models.dtos.UserDTO;
+import org.example.app.models.requests.AuthRequestDTO;
+import org.example.app.models.requests.UserRequestDTO;
 import org.example.app.models.entities.UserEntity;
 import org.example.app.models.enums.UserRole;
 import org.example.app.repositories.UserRepository;
@@ -18,7 +18,7 @@ public class UsersService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
-    public UserEntity loginService(AuthDTO login) {
+    public UserEntity loginService(AuthRequestDTO login) {
         UserEntity userEntity = userRepository.findByEmail(login.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuário com o email " + login.getEmail() + " não encontrado."));
 
@@ -29,7 +29,7 @@ public class UsersService {
         return userEntity;
     }
 
-    public UserEntity registerService(UserDTO register) {
+    public UserEntity registerService(UserRequestDTO register) {
         if (userRepository.findByEmail(register.getEmail()).isPresent()) {
             throw new RuntimeException("Esse email já está em uso.");
         }
