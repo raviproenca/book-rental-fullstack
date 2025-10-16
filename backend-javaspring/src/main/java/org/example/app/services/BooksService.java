@@ -15,8 +15,12 @@ public class BooksService {
     private final ModelMapper modelMapper;
 
     public BookEntity registerService(BookRequestDTO register) {
-        if (bookRepository.findById(    register.getName()).isPresent()) {
-
+        if (bookRepository.findByName(register.getName()).isPresent()) {
+            throw new RuntimeException("Book already exists");
         }
+
+        BookEntity entity = modelMapper.map(register, BookEntity.class);
+
+        return bookRepository.save(entity);
     }
 }

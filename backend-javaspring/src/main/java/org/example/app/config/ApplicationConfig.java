@@ -17,7 +17,7 @@ public class ApplicationConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/login", "/users/**", "/publishers/**", "/books/**", "/renters/**", "/rents/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
