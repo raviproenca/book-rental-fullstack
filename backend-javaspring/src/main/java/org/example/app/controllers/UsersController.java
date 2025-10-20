@@ -1,9 +1,8 @@
 package org.example.app.controllers;
 
 import org.example.app.models.requests.UserRequestDTO;
-import org.example.app.models.entities.UserEntity;
 import org.example.app.models.responses.UserResponseDTO;
-import org.example.app.services.UsersService;
+import org.example.app.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsersController {
 
     @Autowired
-    private UsersService service;
+    private UserService service;
 
     @PostMapping
     public UserResponseDTO registerController(@RequestBody UserRequestDTO request) {

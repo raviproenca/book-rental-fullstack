@@ -1,5 +1,6 @@
 package org.example.app.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.requests.PublisherRequestDTO;
 import org.example.app.models.entities.PublisherEntity;
@@ -15,12 +16,12 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class PublishersService {
+public class PublisherService {
 
     private final PublisherRepository publisherRepository;
     private final ModelMapper modelMapper;
 
-    @PostMapping
+    @Transactional
     public PublisherResponseDTO registerService(PublisherRequestDTO register) {
         if (publisherRepository.findByEmail(register.getEmail()).isPresent()) {
             throw new RuntimeException("Esse email já está em uso por outra editora.");
@@ -33,7 +34,7 @@ public class PublishersService {
         return modelMapper.map(savedEntity, PublisherResponseDTO.class);
     }
 
-    @PutMapping
+    @Transactional
     public PublisherResponseDTO updateService(Long id, PublisherRequestDTO update) {
         PublisherEntity existingPublisher = publisherRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Editora com o id " + id + " não encontrado."));
@@ -51,7 +52,7 @@ public class PublishersService {
         return modelMapper.map(updatedPublisher, PublisherResponseDTO.class);
     }
 
-    @DeleteMapping
+    @Transactional
     public void deleteService(Long id) {
         if (!publisherRepository.existsById(id)) {
             throw new RuntimeException("Editora com o id " + id + " não encontrado.");

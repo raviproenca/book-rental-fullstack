@@ -1,5 +1,6 @@
 package org.example.app.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.requests.AuthRequestDTO;
 import org.example.app.models.requests.UserRequestDTO;
@@ -19,13 +20,13 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UsersService {
+public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
-    @PostMapping
+    @Transactional
     public AuthResponseDTO loginService(AuthRequestDTO login) {
         UserEntity userEntity = userRepository.findByEmail(login.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuário com o email " + login.getEmail() + " não encontrado."));
@@ -37,7 +38,7 @@ public class UsersService {
         return modelMapper.map(userEntity, AuthResponseDTO.class);
     }
 
-    @PostMapping
+    @Transactional
     public UserResponseDTO registerService(UserRequestDTO register) {
         if (userRepository.findByEmail(register.getEmail()).isPresent()) {
             throw new RuntimeException("Esse email já está em uso por outro usuário.");
@@ -60,7 +61,7 @@ public class UsersService {
         return modelMapper.map(savedEntity, UserResponseDTO.class);
     }
 
-    @PutMapping
+    @Transactional
     public UserResponseDTO updateService(Long id, UserRequestDTO update) {
         UserEntity existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário com o id " + id + " não encontrado."));
@@ -89,7 +90,7 @@ public class UsersService {
         return modelMapper.map(updatedUser, UserResponseDTO.class);
     }
 
-    @DeleteMapping
+    @Transactional
     public void deleteService(Long id) {
         if (!userRepository.existsById(id)) {
             throw new RuntimeException("Usuário com o id " + id + " não encontrado.");

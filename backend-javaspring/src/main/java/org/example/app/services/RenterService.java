@@ -1,5 +1,6 @@
 package org.example.app.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.entities.RenterEntity;
 import org.example.app.models.requests.RenterRequestDTO;
@@ -15,12 +16,12 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class RentersService{
+public class RenterService {
 
     private final RenterRepository renterRepository;
     private final ModelMapper modelMapper;
 
-    @PostMapping
+    @Transactional
     public RenterResponseDTO registerService(RenterRequestDTO register) {
         if (renterRepository.findByEmail(register.getEmail()).isPresent()) {
             throw new RuntimeException("Já existe um locatário com esse email.");
@@ -33,7 +34,7 @@ public class RentersService{
         return modelMapper.map(savedEntity, RenterResponseDTO.class);
     }
 
-    @PutMapping
+    @Transactional
     public RenterResponseDTO updateService(Long id, RenterRequestDTO update) {
         RenterEntity existingRenter = renterRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Locatário com o id " + id + " não encontrado."));
@@ -51,7 +52,7 @@ public class RentersService{
         return modelMapper.map(updatedRenter, RenterResponseDTO.class);
     }
 
-    @DeleteMapping
+    @Transactional
     public void deleteService(Long id) {
         if (!renterRepository.existsById(id)) {
             throw new RuntimeException("Locatário com o id " + id + " não encontrado.");

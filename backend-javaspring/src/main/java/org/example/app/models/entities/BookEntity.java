@@ -3,7 +3,7 @@ package org.example.app.models.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -21,7 +21,7 @@ public class BookEntity {
     private String author;
 
     @Column(nullable = false, name = "launch_date")
-    private Date launchDate;
+    private LocalDate launchDate;
 
     @Column(nullable = false, name = "total_quantity")
     private Integer totalQuantity;

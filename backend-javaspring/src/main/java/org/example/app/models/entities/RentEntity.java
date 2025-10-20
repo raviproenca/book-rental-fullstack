@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.example.app.models.enums.RentStatus;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -24,13 +24,13 @@ public class RentEntity {
     private BookEntity bookEntity;
 
     @Column(nullable = false, name = "dead_line")
-    private Date deadLine;
+    private LocalDate deadLine;
 
-    @Column(nullable = false, name = "devolution_date")
-    private Date devolutionDate;
+    @Column(name = "devolution_date")
+    private LocalDate devolutionDate;
 
     @Column(nullable = false, name = "rent_date")
-    private Date rentDate;
+    private LocalDate rentDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, columnDefinition = "rent_status")
