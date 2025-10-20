@@ -15,7 +15,7 @@ public class RentsController {
 
     private final RentsService service;
 
-    public RentResponseDTO RegisterController(@RequestBody RentRequestDTO request) {
+    public RentResponseDTO registerController(@RequestBody RentRequestDTO request) {
         return service.registerService(request);
     }
 }

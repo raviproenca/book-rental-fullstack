@@ -1,9 +1,13 @@
 package org.example.app.models.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 
+@Entity
+@Data
+@Table(name = "books")
 public class BookEntity {
 
     @Id

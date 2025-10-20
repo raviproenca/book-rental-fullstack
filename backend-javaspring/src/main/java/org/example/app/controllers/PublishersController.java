@@ -15,7 +15,7 @@ public class PublishersController {
     private final PublishersService service;
 
     @PostMapping("/register")
-    public PublisherResponseDTO RegisterController(@RequestBody PublisherRequestDTO request) {
+    public PublisherResponseDTO registerController(@RequestBody PublisherRequestDTO request) {
         return service.registerService(request);
     }
 }

@@ -17,8 +17,8 @@ public class UsersController {
     @Autowired
     private UsersService service;
 
-    @PostMapping("/register")
-    public UserResponseDTO RegisterController(@RequestBody UserRequestDTO request) {
+    @PostMapping
+    public UserResponseDTO registerController(@RequestBody UserRequestDTO request) {
         return service.registerService(request);
     }
 }

@@ -15,7 +15,7 @@ public class BooksController {
 
     private final BooksService service;
 
-    public BookResponseDTO RegisterController(@RequestBody BookRequestDTO request) {
+    public BookResponseDTO registerController(@RequestBody BookRequestDTO request) {
         return service.registerService(request);
     }
 }
