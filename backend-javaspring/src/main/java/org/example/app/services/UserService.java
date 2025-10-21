@@ -2,6 +2,7 @@ package org.example.app.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.app.config.security.JwtService;
 import org.example.app.models.requests.AuthRequestDTO;
 import org.example.app.models.requests.UserRequestDTO;
 import org.example.app.models.entities.UserEntity;
@@ -10,6 +11,8 @@ import org.example.app.models.responses.AuthResponseDTO;
 import org.example.app.models.responses.UserResponseDTO;
 import org.example.app.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,17 +28,32 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+
 
     @Transactional
     public AuthResponseDTO loginService(AuthRequestDTO login) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        login.getEmail(),
+                        login.getPassword()
+                )
+        );
+
         UserEntity userEntity = userRepository.findByEmail(login.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuário com o email " + login.getEmail() + " não encontrado."));
 
-        if (!passwordEncoder.matches(login.getPassword(), userEntity.getPassword())) {
-            throw new RuntimeException("Senha inválida");
-        }
 
-        return modelMapper.map(userEntity, AuthResponseDTO.class);
+        String jwtToken = jwtService.generateToken(userEntity);
+
+        return new AuthResponseDTO(
+                userEntity.getName(),
+                userEntity.getRole().name(),
+                userEntity.getEmail(),
+                jwtToken
+        );
     }
 
     @Transactional

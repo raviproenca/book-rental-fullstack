@@ -1,16 +1,7 @@
 package org.example.app.models.responses;
 
-import lombok.Data;
+import java.time.LocalDate;
 
-import java.util.Date;
+public record BookResponseDTO(Long id, String name, String author, LocalDate launchDate, Integer totalQuantity, Integer totalInUse, Long publisherId) {
 
-@Data
-public class BookResponseDTO {
-    private Long id;
-    private String name;
-    private String author;
-    private Date launchDate;
-    private Integer totalQuantity;
-    private Integer totalInUse;
-    private Long publisherId;
 }

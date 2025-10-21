@@ -2,20 +2,44 @@ package org.example.app.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.requests.RenterRequestDTO;
+import org.example.app.models.requests.RenterRequestDTO;
+import org.example.app.models.responses.RenterResponseDTO;
 import org.example.app.models.responses.RenterResponseDTO;
 import org.example.app.services.RenterService;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
-@RequestMapping("/book")
+@RequestMapping("/renters")
 @RequiredArgsConstructor
 public class RentersController {
 
-    private final RenterService service;
+    private final RenterService renterService;
 
-    public RenterResponseDTO registerController(@RequestBody RenterRequestDTO request) {
-        return service.registerService(request);
+    @PostMapping
+    public ResponseEntity<RenterResponseDTO> createRenter(@RequestBody RenterRequestDTO request) {
+        RenterResponseDTO newRenter = renterService.registerService(request);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(newRenter.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(newRenter);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RenterResponseDTO> updateRenter(@PathVariable Long id, @RequestBody RenterRequestDTO request) {
+        RenterResponseDTO updatedRenter = renterService.updateService(id, request);
+        return ResponseEntity.ok(updatedRenter);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRenter(@PathVariable Long id) {
+        renterService.deleteService(id);
+        return ResponseEntity.noContent().build();
     }
 }
