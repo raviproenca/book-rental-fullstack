@@ -17,7 +17,7 @@ public class AuthController {
     private UserService service;
 
     @PostMapping("/login")
-    public AuthResponseDTO roginController(@RequestBody AuthRequestDTO request) {
+    public AuthResponseDTO loginController(@RequestBody AuthRequestDTO request) {
         return service.loginService(request);
     }
 
