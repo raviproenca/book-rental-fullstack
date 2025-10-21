@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -17,13 +18,19 @@ public class UsersController {
 
     private final UserService userService;
 
+    @GetMapping
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        List<UserResponseDTO> users = userService.getUsersService();
+        return ResponseEntity.ok(users);
+    }
+
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO request) {
         UserResponseDTO newUser = userService.registerService(request);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(newUser.getId())
+                .buildAndExpand(newUser.id())
                 .toUri();
 
         return ResponseEntity.created(location).body(newUser);

@@ -1,5 +1,6 @@
 package org.example.app.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.example.app.models.requests.AuthRequestDTO;
 import org.example.app.models.responses.AuthResponseDTO;
 import org.example.app.services.UserService;
@@ -11,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private UserService service;
+    private final UserService service;
 
     @PostMapping("/login")
     public AuthResponseDTO loginController(@RequestBody AuthRequestDTO request) {

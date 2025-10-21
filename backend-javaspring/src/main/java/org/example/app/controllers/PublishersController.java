@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/publishers")
@@ -17,13 +18,19 @@ public class PublishersController {
 
     private final PublisherService publisherService;
 
+    @GetMapping
+    public ResponseEntity<List<PublisherResponseDTO>> getAllPublishers() {
+        List<PublisherResponseDTO> publishers = publisherService.getPublishersService();
+        return ResponseEntity.ok(publishers);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<PublisherResponseDTO> createPublisher(@RequestBody PublisherRequestDTO request) {
         PublisherResponseDTO newPublisher = publisherService.registerService(request);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(newPublisher.getId())
+                .buildAndExpand(newPublisher.id())
                 .toUri();
 
         return ResponseEntity.created(location).body(newPublisher);

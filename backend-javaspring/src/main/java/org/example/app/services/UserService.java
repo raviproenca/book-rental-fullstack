@@ -15,10 +15,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -30,7 +28,6 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-
 
     @Transactional
     public AuthResponseDTO loginService(AuthRequestDTO login) {
@@ -54,6 +51,20 @@ public class UserService {
                 userEntity.getEmail(),
                 jwtToken
         );
+    }
+
+    @Transactional
+    public List<UserResponseDTO> getUsersService() {
+        List<UserEntity> entities = userRepository.findAll();
+
+        return entities.stream()
+                .map(user -> new UserResponseDTO(
+                        user.getId(),
+                        user.getName(),
+                        user.getEmail(),
+                        user.getRole().name()
+                ))
+                .toList();
     }
 
     @Transactional

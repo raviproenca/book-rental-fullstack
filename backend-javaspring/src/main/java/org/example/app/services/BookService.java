@@ -3,15 +3,15 @@ package org.example.app.services;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.entities.PublisherEntity;
-import org.example.app.models.requests.BookRequestDTO;
 import org.example.app.models.entities.BookEntity;
+import org.example.app.models.requests.BookRequestDTO;
 import org.example.app.models.responses.BookResponseDTO;
-import org.example.app.models.responses.PublisherResponseDTO;
 import org.example.app.repositories.BookRepository;
 import org.example.app.repositories.PublisherRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -21,6 +21,23 @@ public class BookService {
     private final BookRepository bookRepository;
     private final PublisherRepository publisherRepository;
     private final ModelMapper modelMapper;
+
+    @Transactional
+    public List<BookResponseDTO> getBooksService() {
+        List<BookEntity> entities = bookRepository.findAll();
+
+        return entities.stream()
+                .map(book -> new BookResponseDTO(
+                        book.getId(),
+                        book.getName(),
+                        book.getAuthor(),
+                        book.getLaunchDate(),
+                        book.getTotalQuantity(),
+                        book.getTotalInUse(),
+                        book.getPublisher().getId()
+                ))
+                .toList();
+    }
 
     @Transactional
     public BookResponseDTO registerService(BookRequestDTO register) {

@@ -5,17 +5,20 @@ import lombok.RequiredArgsConstructor;
 import org.example.app.models.entities.BookEntity;
 import org.example.app.models.entities.RentEntity;
 import org.example.app.models.entities.RenterEntity;
+import org.example.app.models.entities.RentEntity;
 import org.example.app.models.enums.RentStatus;
 import org.example.app.models.requests.RentRequestDTO;
 import org.example.app.models.requests.RentUpdateDTO;
 import org.example.app.models.responses.RentResponseDTO;
 import org.example.app.models.responses.RenterResponseDTO;
+import org.example.app.models.responses.RentResponseDTO;
 import org.example.app.repositories.BookRepository;
 import org.example.app.repositories.RentRepository;
 import org.example.app.repositories.RenterRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +28,23 @@ public class RentService {
     private final BookRepository bookRepository;
     private final RenterRepository renterRepository;
     private final ModelMapper modelMapper;
+
+    @Transactional
+    public List<RentResponseDTO> getRentsService() {
+        List<RentEntity> entities = rentRepository.findAll();
+
+        return entities.stream()
+                .map(rent -> new RentResponseDTO(
+                        rent.getId(),
+                        rent.getRenterEntity().getId(),
+                        rent.getBookEntity().getId(),
+                        rent.getDeadLine(),
+                        rent.getDevolutionDate(),
+                        rent.getRentDate(),
+                        rent.getStatus().name()
+                ))
+                .toList();
+    }
 
     @Transactional
     public RentResponseDTO registerService(RentRequestDTO register) {

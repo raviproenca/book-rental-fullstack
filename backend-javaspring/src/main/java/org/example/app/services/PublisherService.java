@@ -2,13 +2,16 @@ package org.example.app.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.app.models.entities.UserEntity;
 import org.example.app.models.requests.PublisherRequestDTO;
 import org.example.app.models.entities.PublisherEntity;
 import org.example.app.models.responses.PublisherResponseDTO;
+import org.example.app.models.responses.UserResponseDTO;
 import org.example.app.repositories.PublisherRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -17,6 +20,21 @@ public class PublisherService {
 
     private final PublisherRepository publisherRepository;
     private final ModelMapper modelMapper;
+
+    @Transactional
+    public List<PublisherResponseDTO> getPublishersService() {
+        List<PublisherEntity> entities = publisherRepository.findAll();
+
+        return entities.stream()
+                .map(publisher -> new PublisherResponseDTO(
+                        publisher.getId(),
+                        publisher.getName(),
+                        publisher.getEmail(),
+                        publisher.getTelephone(),
+                        publisher.getSite()
+                ))
+                .toList();
+    }
 
     @Transactional
     public PublisherResponseDTO registerService(PublisherRequestDTO register) {

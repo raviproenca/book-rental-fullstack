@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/rents")
@@ -18,13 +19,19 @@ public class RentsController {
 
     private final RentService rentService;
 
+    @GetMapping
+    public ResponseEntity<List<RentResponseDTO>> getAllRents() {
+        List<RentResponseDTO> rents = rentService.getRentsService();
+        return ResponseEntity.ok(rents);
+    }
+
     @PostMapping
     public ResponseEntity<RentResponseDTO> createRent(@RequestBody RentRequestDTO request) {
         RentResponseDTO newRent = rentService.registerService(request);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(newRent.getId())
+                .buildAndExpand(newRent.id())
                 .toUri();
 
         return ResponseEntity.created(location).body(newRent);

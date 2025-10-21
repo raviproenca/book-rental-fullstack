@@ -3,16 +3,15 @@ package org.example.app.services;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.entities.RenterEntity;
+import org.example.app.models.entities.UserEntity;
 import org.example.app.models.requests.RenterRequestDTO;
-import org.example.app.models.responses.BookResponseDTO;
 import org.example.app.models.responses.RenterResponseDTO;
+import org.example.app.models.responses.UserResponseDTO;
 import org.example.app.repositories.RenterRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -21,6 +20,22 @@ public class RenterService {
 
     private final RenterRepository renterRepository;
     private final ModelMapper modelMapper;
+
+    @Transactional
+    public List<RenterResponseDTO> getRentersService() {
+        List<RenterEntity> entities = renterRepository.findAll();
+
+        return entities.stream()
+                .map(renter -> new RenterResponseDTO(
+                        renter.getId(),
+                        renter.getName(),
+                        renter.getEmail(),
+                        renter.getTelephone(),
+                        renter.getAddress(),
+                        renter.getCpf()
+                ))
+                .toList();
+    }
 
     @Transactional
     public RenterResponseDTO registerService(RenterRequestDTO register) {
