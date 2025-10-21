@@ -28,7 +28,13 @@ public class PublisherService {
 
         PublisherEntity savedEntity = publisherRepository.save(entity);
 
-        return modelMapper.map(savedEntity, PublisherResponseDTO.class);
+        return new PublisherResponseDTO(
+                savedEntity.getId(),
+                savedEntity.getName(),
+                savedEntity.getEmail(),
+                savedEntity.getTelephone(),
+                savedEntity.getSite()
+        );
     }
 
     @Transactional
@@ -44,9 +50,15 @@ public class PublisherService {
 
         modelMapper.map(update, existingPublisher);
 
-        PublisherEntity updatedPublisher = publisherRepository.save(existingPublisher);
+        PublisherEntity updatedEntity = publisherRepository.save(existingPublisher);
 
-        return modelMapper.map(updatedPublisher, PublisherResponseDTO.class);
+        return new PublisherResponseDTO(
+                updatedEntity.getId(),
+                updatedEntity.getName(),
+                updatedEntity.getEmail(),
+                updatedEntity.getTelephone(),
+                updatedEntity.getSite()
+        );
     }
 
     @Transactional

@@ -76,7 +76,12 @@ public class UserService {
 
         UserEntity savedEntity = userRepository.save(newUser);
 
-        return modelMapper.map(savedEntity, UserResponseDTO.class);
+        return new UserResponseDTO(
+                savedEntity.getId(),
+                savedEntity.getName(),
+                savedEntity.getEmail(),
+                savedEntity.getRole().name()
+        );
     }
 
     @Transactional
@@ -103,9 +108,14 @@ public class UserService {
             throw new RuntimeException("Tipo de permissão inválida.");
         }
 
-        UserEntity updatedUser = userRepository.save(existingUser);
+        UserEntity updatedEntity = userRepository.save(existingUser);
 
-        return modelMapper.map(updatedUser, UserResponseDTO.class);
+        return new UserResponseDTO(
+                updatedEntity.getId(),
+                updatedEntity.getName(),
+                updatedEntity.getEmail(),
+                updatedEntity.getRole().name()
+        );
     }
 
     @Transactional

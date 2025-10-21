@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.entities.RenterEntity;
 import org.example.app.models.requests.RenterRequestDTO;
+import org.example.app.models.responses.BookResponseDTO;
 import org.example.app.models.responses.RenterResponseDTO;
 import org.example.app.repositories.RenterRepository;
 import org.modelmapper.ModelMapper;
@@ -31,7 +32,14 @@ public class RenterService {
 
         RenterEntity savedEntity = renterRepository.save(entity);
 
-        return modelMapper.map(savedEntity, RenterResponseDTO.class);
+        return new RenterResponseDTO(
+                savedEntity.getId(),
+                savedEntity.getName(),
+                savedEntity.getEmail(),
+                savedEntity.getTelephone(),
+                savedEntity.getAddress(),
+                savedEntity.getCpf()
+        );
     }
 
     @Transactional
@@ -47,9 +55,16 @@ public class RenterService {
 
         modelMapper.map(update, existingRenter);
 
-        RenterEntity updatedRenter = renterRepository.save(existingRenter);
+        RenterEntity updatedEntity = renterRepository.save(existingRenter);
 
-        return modelMapper.map(updatedRenter, RenterResponseDTO.class);
+        return new RenterResponseDTO(
+                updatedEntity.getId(),
+                updatedEntity.getName(),
+                updatedEntity.getEmail(),
+                updatedEntity.getTelephone(),
+                updatedEntity.getAddress(),
+                updatedEntity.getCpf()
+        );
     }
 
     @Transactional

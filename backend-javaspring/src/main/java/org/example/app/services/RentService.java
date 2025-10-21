@@ -9,6 +9,7 @@ import org.example.app.models.enums.RentStatus;
 import org.example.app.models.requests.RentRequestDTO;
 import org.example.app.models.requests.RentUpdateDTO;
 import org.example.app.models.responses.RentResponseDTO;
+import org.example.app.models.responses.RenterResponseDTO;
 import org.example.app.repositories.BookRepository;
 import org.example.app.repositories.RentRepository;
 import org.example.app.repositories.RenterRepository;
@@ -48,7 +49,15 @@ public class RentService {
 
         RentEntity savedEntity = rentRepository.save(newRent);
 
-        return modelMapper.map(savedEntity, RentResponseDTO.class);
+        return new RentResponseDTO(
+                savedEntity.getId(),
+                savedEntity.getRenterEntity().getId(),
+                savedEntity.getBookEntity().getId(),
+                savedEntity.getDeadLine(),
+                savedEntity.getDevolutionDate(),
+                savedEntity.getRentDate(),
+                savedEntity.getStatus().name()
+        );
     }
 
     @Transactional
@@ -67,9 +76,17 @@ public class RentService {
         existingRent.setDeadLine(update.getDeadLine());
         existingRent.setDevolutionDate(update.getDevolutionDate());
 
-        RentEntity updatedRent = rentRepository.save(existingRent);
+        RentEntity updatedEntity = rentRepository.save(existingRent);
 
-        return modelMapper.map(updatedRent, RentResponseDTO.class);
+        return new RentResponseDTO(
+                updatedEntity.getId(),
+                updatedEntity.getRenterEntity().getId(),
+                updatedEntity.getBookEntity().getId(),
+                updatedEntity.getDeadLine(),
+                updatedEntity.getDevolutionDate(),
+                updatedEntity.getRentDate(),
+                updatedEntity.getStatus().name()
+        );
     }
 
     @Transactional
@@ -90,8 +107,16 @@ public class RentService {
             rent.setStatus(RentStatus.IN_TIME);
         }
 
-        RentEntity updatedRent = rentRepository.save(rent);
+        RentEntity updatedEntity = rentRepository.save(rent);
 
-        return modelMapper.map(updatedRent, RentResponseDTO.class);
+        return new RentResponseDTO(
+                updatedEntity.getId(),
+                updatedEntity.getRenterEntity().getId(),
+                updatedEntity.getBookEntity().getId(),
+                updatedEntity.getDeadLine(),
+                updatedEntity.getDevolutionDate(),
+                updatedEntity.getRentDate(),
+                updatedEntity.getStatus().name()
+        );
     }
 }

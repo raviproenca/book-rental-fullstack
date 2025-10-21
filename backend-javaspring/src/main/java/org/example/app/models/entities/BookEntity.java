@@ -26,6 +26,9 @@ public class BookEntity {
     @Column(nullable = false, name = "total_quantity")
     private Integer totalQuantity;
 
+    @Column(nullable = false, name = "total_in_use")
+    private Integer totalInUse;
+
     @ManyToOne
     @JoinColumn(name = "publisher_id")
     private PublisherEntity publisher;

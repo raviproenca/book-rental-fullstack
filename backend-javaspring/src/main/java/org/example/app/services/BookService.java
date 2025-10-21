@@ -6,6 +6,7 @@ import org.example.app.models.entities.PublisherEntity;
 import org.example.app.models.requests.BookRequestDTO;
 import org.example.app.models.entities.BookEntity;
 import org.example.app.models.responses.BookResponseDTO;
+import org.example.app.models.responses.PublisherResponseDTO;
 import org.example.app.repositories.BookRepository;
 import org.example.app.repositories.PublisherRepository;
 import org.modelmapper.ModelMapper;
@@ -35,7 +36,15 @@ public class BookService {
 
         BookEntity savedEntity = bookRepository.save(newBook);
 
-        return modelMapper.map(savedEntity, BookResponseDTO.class);
+        return new BookResponseDTO(
+                savedEntity.getId(),
+                savedEntity.getName(),
+                savedEntity.getAuthor(),
+                savedEntity.getLaunchDate(),
+                savedEntity.getTotalQuantity(),
+                savedEntity.getTotalInUse(),
+                savedEntity.getPublisher().getId()
+        );
     }
 
     @Transactional
@@ -51,9 +60,17 @@ public class BookService {
 
         modelMapper.map(update, existingBook);
 
-        BookEntity updatedBook = bookRepository.save(existingBook);
+        BookEntity updatedEntity = bookRepository.save(existingBook);
 
-        return modelMapper.map(updatedBook, BookResponseDTO.class);
+        return new BookResponseDTO(
+                updatedEntity.getId(),
+                updatedEntity.getName(),
+                updatedEntity.getAuthor(),
+                updatedEntity.getLaunchDate(),
+                updatedEntity.getTotalQuantity(),
+                updatedEntity.getTotalInUse(),
+                updatedEntity.getPublisher().getId()
+        );
     }
 
     @Transactional
