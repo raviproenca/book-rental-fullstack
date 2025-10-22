@@ -38,12 +38,12 @@ public class RentsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RentResponseDTO> updateRent(@PathVariable Long id, @RequestBody RentUpdateDTO request) {
+    public ResponseEntity<RentResponseDTO> updateRent(@PathVariable("id") Long id, @RequestBody RentUpdateDTO request) {
         RentResponseDTO updatedRent = rentService.updateService(id, request);
         return ResponseEntity.ok(updatedRent);
     }
 
-    public ResponseEntity<RentResponseDTO> returnRent(@PathVariable Long id) {
+    public ResponseEntity<RentResponseDTO> returnRent(@PathVariable("id") Long id) {
         RentResponseDTO returnedRent = rentService.returnBookService(id);
         return ResponseEntity.ok(returnedRent);
     }

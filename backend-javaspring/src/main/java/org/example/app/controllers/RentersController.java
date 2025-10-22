@@ -37,13 +37,13 @@ public class RentersController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RenterResponseDTO> updateRenter(@PathVariable Long id, @RequestBody RenterRequestDTO request) {
+    public ResponseEntity<RenterResponseDTO> updateRenter(@PathVariable("id") Long id, @RequestBody RenterRequestDTO request) {
         RenterResponseDTO updatedRenter = renterService.updateService(id, request);
         return ResponseEntity.ok(updatedRenter);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRenter(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteRenter(@PathVariable("id") Long id) {
         renterService.deleteService(id);
         return ResponseEntity.noContent().build();
     }

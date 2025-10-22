@@ -37,13 +37,13 @@ public class PublishersController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PublisherResponseDTO> updatePublisher(@PathVariable Long id, @RequestBody PublisherRequestDTO request) {
+    public ResponseEntity<PublisherResponseDTO> updatePublisher(@PathVariable("id") Long id, @RequestBody PublisherRequestDTO request) {
         PublisherResponseDTO updatedPublisher = publisherService.updateService(id, request);
         return ResponseEntity.ok(updatedPublisher);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePublisher(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePublisher(@PathVariable("id") Long id) {
         publisherService.deleteService(id);
         return ResponseEntity.noContent().build();
     }
