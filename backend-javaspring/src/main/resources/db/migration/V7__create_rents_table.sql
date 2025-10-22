@@ -6,4 +6,6 @@ CREATE TABLE rents(
 	devolution_date DATE,
 	rent_date DATE NOT NULL,
 	status rent_status NOT NULL DEFAULT 'RENTED'
+	FOREIGN KEY (renter_id) REFERENCES renters(id)
+	FOREIGN KEY (book_id) REFERENCES books(id)
 )

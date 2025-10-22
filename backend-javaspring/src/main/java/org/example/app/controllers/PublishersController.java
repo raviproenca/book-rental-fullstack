@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/publishers")
+@RequestMapping("/publisher")
 @RequiredArgsConstructor
 public class PublishersController {
 
@@ -24,7 +24,7 @@ public class PublishersController {
         return ResponseEntity.ok(publishers);
     }
 
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<PublisherResponseDTO> createPublisher(@RequestBody PublisherRequestDTO request) {
         PublisherResponseDTO newPublisher = publisherService.registerService(request);
 

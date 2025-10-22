@@ -36,8 +36,8 @@ public class RentService {
         return entities.stream()
                 .map(rent -> new RentResponseDTO(
                         rent.getId(),
-                        rent.getRenterEntity().getId(),
-                        rent.getBookEntity().getId(),
+                        rent.getRenterEntity(),
+                        rent.getBookEntity(),
                         rent.getDeadLine(),
                         rent.getDevolutionDate(),
                         rent.getRentDate(),
@@ -66,13 +66,12 @@ public class RentService {
         newRent.setDeadLine(register.getDeadLine());
         newRent.setRentDate(LocalDate.now());
         newRent.setStatus(RentStatus.RENTED);
-
         RentEntity savedEntity = rentRepository.save(newRent);
 
         return new RentResponseDTO(
                 savedEntity.getId(),
-                savedEntity.getRenterEntity().getId(),
-                savedEntity.getBookEntity().getId(),
+                savedEntity.getRenterEntity(),
+                savedEntity.getBookEntity(),
                 savedEntity.getDeadLine(),
                 savedEntity.getDevolutionDate(),
                 savedEntity.getRentDate(),
@@ -100,8 +99,8 @@ public class RentService {
 
         return new RentResponseDTO(
                 updatedEntity.getId(),
-                updatedEntity.getRenterEntity().getId(),
-                updatedEntity.getBookEntity().getId(),
+                updatedEntity.getRenterEntity(),
+                updatedEntity.getBookEntity(),
                 updatedEntity.getDeadLine(),
                 updatedEntity.getDevolutionDate(),
                 updatedEntity.getRentDate(),
@@ -131,8 +130,8 @@ public class RentService {
 
         return new RentResponseDTO(
                 updatedEntity.getId(),
-                updatedEntity.getRenterEntity().getId(),
-                updatedEntity.getBookEntity().getId(),
+                updatedEntity.getRenterEntity(),
+                updatedEntity.getBookEntity(),
                 updatedEntity.getDeadLine(),
                 updatedEntity.getDevolutionDate(),
                 updatedEntity.getRentDate(),

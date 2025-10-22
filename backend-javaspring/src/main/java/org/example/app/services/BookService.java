@@ -34,7 +34,7 @@ public class BookService {
                         book.getLaunchDate(),
                         book.getTotalQuantity(),
                         book.getTotalInUse(),
-                        book.getPublisher().getId()
+                        book.getPublisher()
                 ))
                 .toList();
     }
@@ -50,6 +50,9 @@ public class BookService {
 
         BookEntity newBook = modelMapper.map(register, BookEntity.class);
         newBook.setPublisher(publisher);
+        if (newBook.getTotalInUse() == null) {
+            newBook.setTotalInUse(0);
+        }
 
         BookEntity savedEntity = bookRepository.save(newBook);
 
@@ -60,7 +63,7 @@ public class BookService {
                 savedEntity.getLaunchDate(),
                 savedEntity.getTotalQuantity(),
                 savedEntity.getTotalInUse(),
-                savedEntity.getPublisher().getId()
+                savedEntity.getPublisher()
         );
     }
 
@@ -86,7 +89,7 @@ public class BookService {
                 updatedEntity.getLaunchDate(),
                 updatedEntity.getTotalQuantity(),
                 updatedEntity.getTotalInUse(),
-                updatedEntity.getPublisher().getId()
+                updatedEntity.getPublisher()
         );
     }
 

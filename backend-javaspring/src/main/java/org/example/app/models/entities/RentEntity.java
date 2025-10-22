@@ -3,6 +3,8 @@ package org.example.app.models.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.example.app.models.enums.RentStatus;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 
@@ -33,6 +35,7 @@ public class RentEntity {
     private LocalDate rentDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, columnDefinition = "rent_status")
+    @Column(name = "status", nullable = false)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private RentStatus status;
 }

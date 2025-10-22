@@ -176,7 +176,7 @@
 
                   <q-item v-if="props.row.rentDate">
                     <q-item-section>
-                      <q-item-label caption>{{ t('common.rentDate') }}</q-item-label>
+                      <q-item-label caption>{{ t('common.devolutionDate') }}</q-item-label>
 
                       <q-item-label>{{
                         formatDateToBR(props.row.devolutionDate) || t('common.notDelivered')
