@@ -5,6 +5,7 @@ import org.example.app.models.requests.AuthRequestDTO;
 import org.example.app.models.responses.AuthResponseDTO;
 import org.example.app.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +19,9 @@ public class AuthController {
     private final UserService service;
 
     @PostMapping("/login")
-    public AuthResponseDTO loginController(@RequestBody AuthRequestDTO request) {
-        return service.loginService(request);
+    public ResponseEntity<AuthResponseDTO> loginController(@RequestBody AuthRequestDTO request) {
+        AuthResponseDTO newAuth = service.loginService(request);
+        return ResponseEntity.ok(newAuth);
     }
 
 }
