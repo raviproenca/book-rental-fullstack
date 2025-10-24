@@ -2,6 +2,7 @@ package org.example.app.repositories;
 
 import org.example.app.models.entities.BookEntity;
 import org.example.app.models.entities.RentEntity;
+import org.example.app.models.responses.RenterRentCountDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,8 +27,11 @@ public interface RentRepository extends JpaRepository<RentEntity, Long> {
     @Query("SELECT COUNT(r) FROM RentEntity r WHERE r.status = 'LATE'")
     Long findLateBooks();
 
-    @Query("SELECT COUNT(r) FROM RentEntity r WHERE r.renterEntity.id = :renterId AND")
-    Long findRentsLateQuantityBooks(@Param("renterId") Long renterId);
+    @Query("SELECT new org.example.app.models.responses.RenterRentCountDTO(r.renterEntity.name, COUNT(r)) " +
+            "FROM RentEntity r " +
+            "GROUP BY r.renterEntity.name " +
+            "ORDER BY COUNT(r) DESC")
+    List<RenterRentCountDTO> countRentsPerRenter();
 
     @Query("SELECT COUNT(r) FROM RentEntity r")
     Long findAllRentsQuantity();
