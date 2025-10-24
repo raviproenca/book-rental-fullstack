@@ -21,7 +21,8 @@ const rentsth = computed(() => [
   {
     name: 'book',
     label: t('common.book'),
-    field: (row) => row.book.name,
+    field: 'book',
+    format: (val) => val?.name ?? '-',
     align: 'center',
     apiKey: 'bookId',
     sortable: true,
@@ -29,7 +30,8 @@ const rentsth = computed(() => [
   {
     name: 'renter',
     label: t('common.renter'),
-    field: (row) => row.renter.name,
+    field: 'renter',
+    format: (val) => val?.name ?? '-',
     align: 'center',
     apiKey: 'renterId',
     sortable: true,

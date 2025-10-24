@@ -8,6 +8,7 @@ import org.example.app.models.requests.BookRequestDTO;
 import org.example.app.models.responses.BookResponseDTO;
 import org.example.app.repositories.BookRepository;
 import org.example.app.repositories.PublisherRepository;
+import org.example.app.repositories.RentRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final PublisherRepository publisherRepository;
+    private final RentRepository rentRepository;
     private final ModelMapper modelMapper;
 
     @Transactional
@@ -97,6 +99,10 @@ public class BookService {
     public void deleteService(Long id) {
         if (!bookRepository.existsById(id)) {
             throw new RuntimeException("Livro com o id " + id + " não encontrado.");
+        }
+
+        if (rentRepository.existsByBookEntity_Id(id)) {
+            throw new RuntimeException("Livro com o id " + id + " está vinculado a um aluguel e não pode ser deletado.");
         }
 
         bookRepository.deleteById(id);

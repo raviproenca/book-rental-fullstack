@@ -3,10 +3,9 @@ package org.example.app.services;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.entities.RenterEntity;
-import org.example.app.models.entities.UserEntity;
 import org.example.app.models.requests.RenterRequestDTO;
 import org.example.app.models.responses.RenterResponseDTO;
-import org.example.app.models.responses.UserResponseDTO;
+import org.example.app.repositories.RentRepository;
 import org.example.app.repositories.RenterRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -19,6 +18,7 @@ import java.util.Optional;
 public class RenterService {
 
     private final RenterRepository renterRepository;
+    private final RentRepository rentRepository;
     private final ModelMapper modelMapper;
 
     @Transactional
@@ -86,6 +86,10 @@ public class RenterService {
     public void deleteService(Long id) {
         if (!renterRepository.existsById(id)) {
             throw new RuntimeException("Locatário com o id " + id + " não encontrado.");
+        }
+
+        if (rentRepository.existsByRenterEntity_Id(id)) {
+            throw new RuntimeException("Locatário com o id " + id + " está vinculado a um aluguel e não pode ser deletado.");
         }
 
         renterRepository.deleteById(id);
