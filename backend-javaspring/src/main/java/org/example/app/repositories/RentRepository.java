@@ -9,32 +9,42 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface RentRepository extends JpaRepository<RentEntity, Long> {
     @Query("SELECT COUNT(r) FROM RentEntity r WHERE r.bookEntity.id = :bookId AND r.status IN ('RENTED', 'LATE')")
     int countActiveRentsByBookId(@Param("bookId") Long bookId);
 
-    @Query("SELECT r.bookEntity FROM RentEntity r GROUP BY r.bookEntity ORDER BY COUNT(r.bookEntity) DESC")
-    Page<BookEntity> findMostRentedBooks(Pageable pageable);
+    @Query("SELECT r.bookEntity FROM RentEntity r " +
+            "WHERE r.rentDate >= :startDate " +
+            "GROUP BY r.bookEntity ORDER BY COUNT(r.bookEntity) DESC")
+    Page<BookEntity> findMostRentedBooks(Pageable pageable, @Param("startDate") LocalDate startDate);
 
-    @Query("SELECT COUNT(r) FROM RentEntity r WHERE r.status = 'IN_TIME'")
-    Long findDeliveredInTimeBooks();
+    @Query("SELECT COUNT(r) FROM RentEntity r " +
+            "WHERE r.status = 'IN_TIME' AND r.rentDate >= :startDate")
+    Long findDeliveredInTimeBooks(@Param("startDate") LocalDate startDate);
 
-    @Query("SELECT COUNT(r) FROM RentEntity r WHERE r.status = 'DELIVERED_WITH_DELAY'")
-    Long findDeliveredWithDelayBooks();
+    @Query("SELECT COUNT(r) FROM RentEntity r " +
+            "WHERE r.status = 'DELIVERED_WITH_DELAY' AND r.rentDate >= :startDate")
+    Long findDeliveredWithDelayBooks(@Param("startDate") LocalDate startDate);
 
-    @Query("SELECT COUNT(r) FROM RentEntity r WHERE r.status = 'LATE'")
-    Long findLateBooks();
+    @Query("SELECT COUNT(r) FROM RentEntity r " +
+            "WHERE r.status = 'LATE' AND r.rentDate >= :startDate")
+    Long findLateBooks(@Param("startDate") LocalDate startDate);
 
-    @Query("SELECT new org.example.app.models.responses.RenterRentCountDTO(r.renterEntity.name, COUNT(r)) " +
+    @Query("SELECT new org.example.app.models.responses.RenterRentCountDTO(" +
+            "    r.renterEntity.name, " +
+            "    COUNT(r), " +
+            "    SUM(CASE WHEN r.status IN ('RENTED', 'LATE') THEN 1 ELSE 0 END)" +
+            ") " +
             "FROM RentEntity r " +
             "GROUP BY r.renterEntity.name " +
             "ORDER BY COUNT(r) DESC")
     List<RenterRentCountDTO> countRentsPerRenter();
 
-    @Query("SELECT COUNT(r) FROM RentEntity r")
-    Long findAllRentsQuantity();
+    @Query("SELECT COUNT(r) FROM RentEntity r WHERE r.rentDate >= :startDate")
+    Long findAllRentsQuantity(@Param("startDate") LocalDate startDate);
 
     boolean existsByRenterEntity_Id(Long renterId);
     boolean existsByBookEntity_Id(Long bookId);
