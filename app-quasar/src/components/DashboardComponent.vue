@@ -82,10 +82,7 @@
               dense
               rounded
               :options="perRenter"
-              option-value="name"
               option-label="name"
-              map-options
-              emit-value
               :label="t('dashboard.selectRenter')"
               clearable
             />
@@ -164,7 +161,7 @@ const thirdBook = computed(() => bookMoreRented.value.data?.[2])
 const rentedBooks = computed(() => rentsQuantity.value.data)
 const rentedLateBooks = computed(() => rentsLateQuantity.value.data)
 
-const perRenter = computed(() => rentsPerRenter.value.data?.content)
+const perRenter = computed(() => rentsPerRenter.value.data?.content || [])
 
 const selectedRenter = ref(null)
 
@@ -197,10 +194,8 @@ const chartDoughnutData = computed(() => {
   const limeGreen = '#A7ED4A'
   const purple = '#9B59B6'
 
-  const renterData = perRenter.value.find((renter) => renter.name === selectedRenter.value)
-
-  const activeRents = renterData?.rentsActive
-  const totalRents = renterData?.rentsQuantity
+  const activeRents = selectedRenter.value?.rentsActive || 0
+  const totalRents = selectedRenter.value?.rentsQuantity || 0
 
   return {
     labels: [t('dashboard.atMoment'), t('dashboard.totalRents')],
