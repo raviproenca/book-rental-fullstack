@@ -2,6 +2,8 @@ package org.example.app.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.app.exceptions.BusinessRuleException;
+import org.example.app.exceptions.ResourceNotFoundException;
 import org.example.app.models.requests.PublisherRequestDTO;
 import org.example.app.models.entities.PublisherEntity;
 import org.example.app.models.responses.PublisherResponseDTO;
@@ -39,11 +41,10 @@ public class PublisherService {
     @Transactional
     public PublisherResponseDTO registerService(PublisherRequestDTO register) {
         if (publisherRepository.findByEmail(register.getEmail()).isPresent()) {
-            throw new RuntimeException("Esse email já está em uso por outra editora.");
+            throw new BusinessRuleException("Esse email já está em uso por outra editora.");
         }
 
         PublisherEntity entity = modelMapper.map(register, PublisherEntity.class);
-
         PublisherEntity savedEntity = publisherRepository.save(entity);
 
         return new PublisherResponseDTO(
@@ -58,16 +59,15 @@ public class PublisherService {
     @Transactional
     public PublisherResponseDTO updateService(Long id, PublisherRequestDTO update) {
         PublisherEntity existingPublisher = publisherRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Editora com o id " + id + " não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Editora com o id " + id + " não encontrada."));
 
         Optional<PublisherEntity> publisherWithNewEmail = publisherRepository.findByEmail(update.getEmail());
 
         if (publisherWithNewEmail.isPresent() && !publisherWithNewEmail.get().getId().equals(existingPublisher.getId())) {
-            throw new RuntimeException("Esse email já está em uso por outra editora.");
+            throw new BusinessRuleException("Esse email já está em uso por outra editora.");
         }
 
         modelMapper.map(update, existingPublisher);
-
         PublisherEntity updatedEntity = publisherRepository.save(existingPublisher);
 
         return new PublisherResponseDTO(
@@ -82,11 +82,11 @@ public class PublisherService {
     @Transactional
     public void deleteService(Long id) {
         if (!publisherRepository.existsById(id)) {
-            throw new RuntimeException("Editora com o id " + id + " não encontrado.");
+            throw new ResourceNotFoundException("Editora com o id " + id + " não encontrada.");
         }
 
         if (bookRepository.existsByPublisher_Id(id)) {
-            throw new RuntimeException("Editora com o id " + id + " está vinculada a um livro e não pode ser deletada.");
+            throw new BusinessRuleException("Esta editora está vinculada a um ou mais livros e não pode ser deletada.");
         }
 
         publisherRepository.deleteById(id);

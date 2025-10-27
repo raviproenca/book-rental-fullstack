@@ -2,6 +2,8 @@ package org.example.app.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.app.exceptions.BusinessRuleException;
+import org.example.app.exceptions.ResourceNotFoundException;
 import org.example.app.models.entities.RenterEntity;
 import org.example.app.models.requests.RenterRequestDTO;
 import org.example.app.models.responses.RenterResponseDTO;
@@ -40,11 +42,10 @@ public class RenterService {
     @Transactional
     public RenterResponseDTO registerService(RenterRequestDTO register) {
         if (renterRepository.findByEmail(register.getEmail()).isPresent()) {
-            throw new RuntimeException("Já existe um locatário com esse email.");
+            throw new BusinessRuleException("Já existe um locatário com esse email.");
         }
 
         RenterEntity entity = modelMapper.map(register, RenterEntity.class);
-
         RenterEntity savedEntity = renterRepository.save(entity);
 
         return new RenterResponseDTO(
@@ -60,16 +61,15 @@ public class RenterService {
     @Transactional
     public RenterResponseDTO updateService(Long id, RenterRequestDTO update) {
         RenterEntity existingRenter = renterRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Locatário com o id " + id + " não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Locatário com o id " + id + " não encontrado."));
 
         Optional<RenterEntity> renterWithNewEmail = renterRepository.findByEmail(update.getEmail());
 
         if (renterWithNewEmail.isPresent() && !renterWithNewEmail.get().getId().equals(existingRenter.getId())) {
-            throw new RuntimeException("Já existe um locatário com esse email.");
+            throw new BusinessRuleException("Já existe um locatário com esse email.");
         }
 
         modelMapper.map(update, existingRenter);
-
         RenterEntity updatedEntity = renterRepository.save(existingRenter);
 
         return new RenterResponseDTO(
@@ -85,11 +85,11 @@ public class RenterService {
     @Transactional
     public void deleteService(Long id) {
         if (!renterRepository.existsById(id)) {
-            throw new RuntimeException("Locatário com o id " + id + " não encontrado.");
+            throw new ResourceNotFoundException("Locatário com o id " + id + " não encontrado.");
         }
 
         if (rentRepository.existsByRenterEntity_Id(id)) {
-            throw new RuntimeException("Locatário com o id " + id + " está vinculado a um aluguel e não pode ser deletado.");
+            throw new BusinessRuleException("Este locatário está vinculado a um ou mais aluguéis e não pode ser deletado.");
         }
 
         renterRepository.deleteById(id);

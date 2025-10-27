@@ -2,6 +2,8 @@ package org.example.app.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.app.exceptions.BusinessRuleException;
+import org.example.app.exceptions.ResourceNotFoundException;
 import org.example.app.models.entities.PublisherEntity;
 import org.example.app.models.entities.BookEntity;
 import org.example.app.models.requests.BookRequestDTO;
@@ -44,11 +46,11 @@ public class BookService {
     @Transactional
     public BookResponseDTO registerService(BookRequestDTO register) {
         if (bookRepository.findByName(register.getName()).isPresent()) {
-            throw new RuntimeException("Já existe um livro com esse nome.");
+            throw new BusinessRuleException("Já existe um livro com esse nome.");
         }
 
         PublisherEntity publisher = publisherRepository.findById(register.getPublisherId())
-                .orElseThrow(() -> new RuntimeException("Editora com id " + register.getPublisherId() + " não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Editora com id " + register.getPublisherId() + " não encontrada."));
 
         BookEntity newBook = modelMapper.map(register, BookEntity.class);
         newBook.setPublisher(publisher);
@@ -72,12 +74,12 @@ public class BookService {
     @Transactional
     public BookResponseDTO updateService(Long id, BookRequestDTO update) {
         BookEntity existingBook = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário com o id " + id + " não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Livro com o id " + id + " não encontrado."));
 
         Optional<BookEntity> bookWithNewName = bookRepository.findByName(update.getName());
 
         if (bookWithNewName.isPresent() && !bookWithNewName.get().getId().equals(existingBook.getId())) {
-            throw new RuntimeException("Já existe um livro com esse nome.");
+            throw new BusinessRuleException("Já existe um livro com esse nome.");
         }
 
         modelMapper.map(update, existingBook);
@@ -98,11 +100,11 @@ public class BookService {
     @Transactional
     public void deleteService(Long id) {
         if (!bookRepository.existsById(id)) {
-            throw new RuntimeException("Livro com o id " + id + " não encontrado.");
+            throw new ResourceNotFoundException("Livro com o id " + id + " não encontrado.");
         }
 
         if (rentRepository.existsByBookEntity_Id(id)) {
-            throw new RuntimeException("Livro com o id " + id + " está vinculado a um aluguel e não pode ser deletado.");
+            throw new BusinessRuleException("Livro com o id " + id + " está vinculado a um aluguel e não pode ser deletado.");
         }
 
         bookRepository.deleteById(id);

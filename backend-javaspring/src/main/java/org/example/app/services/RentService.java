@@ -2,6 +2,8 @@ package org.example.app.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.app.exceptions.BusinessRuleException;
+import org.example.app.exceptions.ResourceNotFoundException;
 import org.example.app.models.entities.BookEntity;
 import org.example.app.models.entities.RentEntity;
 import org.example.app.models.entities.RenterEntity;
@@ -46,15 +48,15 @@ public class RentService {
     @Transactional
     public RentResponseDTO registerService(RentRequestDTO register) {
         BookEntity book = bookRepository.findById(register.getBookId())
-                .orElseThrow(() -> new RuntimeException("Livro com id " + register.getBookId() + " não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Livro com id " + register.getBookId() + " não encontrado."));
 
         RenterEntity renter = renterRepository.findById(register.getRenterId())
-                .orElseThrow(() -> new RuntimeException("Locatário com id " + register.getRenterId() + " não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Locatário com id " + register.getRenterId() + " não encontrado."));
 
         int activeRentsCount = rentRepository.countActiveRentsByBookId(book.getId());
 
         if (activeRentsCount >= book.getTotalQuantity()) {
-            throw new IllegalStateException("Não há exemplares disponíveis para o livro '" + book.getName() + "'.");
+            throw new BusinessRuleException("Não há exemplares disponíveis para o livro '" + book.getName() + "'.");
         }
 
         RentEntity newRent = new RentEntity();
@@ -79,13 +81,13 @@ public class RentService {
     @Transactional
     public RentResponseDTO updateService(Long id, RentUpdateDTO update) {
         RentEntity existingRent = rentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Aluguél com o id " + id + " não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Aluguél com o id " + id + " não encontrado."));
 
         BookEntity book = bookRepository.findById(update.getBookId())
-                .orElseThrow(() -> new RuntimeException("Livro com id " + update.getBookId() + " não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Livro com id " + update.getBookId() + " não encontrado."));
 
         RenterEntity renter = renterRepository.findById(update.getRenterId())
-                .orElseThrow(() -> new RuntimeException("Locatário com id " + update.getRenterId() + " não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Locatário com id " + update.getRenterId() + " não encontrado."));
 
         existingRent.setBookEntity(book);
         existingRent.setRenterEntity(renter);
@@ -108,10 +110,10 @@ public class RentService {
     @Transactional
     public RentResponseDTO returnBookService(Long id) {
         RentEntity rent = rentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Aluguél com o id " + id + " não encontrado."));
+                .orElseThrow(() -> new ResourceNotFoundException("Aluguél com o id " + id + " não encontrado."));
 
         if (rent.getStatus() != RentStatus.RENTED && rent.getStatus() != RentStatus.LATE) {
-            throw new IllegalStateException("Este livro já foi devolvido ou o aluguel foi cancelado.");
+            throw new BusinessRuleException("Este livro já foi devolvido ou o aluguel foi cancelado.");
         }
 
         LocalDate today = LocalDate.now();
