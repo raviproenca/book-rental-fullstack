@@ -69,8 +69,21 @@ public class UserService {
 
     @Transactional
     public UserResponseDTO registerService(UserRequestDTO register) {
+
         if (userRepository.findByEmail(register.getEmail()).isPresent()) {
             throw new BusinessRuleException("Esse email já está em uso por outro usuário.");
+        }
+
+        if (register.getName().length() < 3) {
+            throw new BusinessRuleException("O nome não deve ter menos de 3 letras.");
+        }
+
+        if (register.getName().matches(".*\\d.*")) {
+            throw new BusinessRuleException("O nome não deve conter números");
+        }
+
+        if (register.getPassword().length() < 8) {
+            throw new BusinessRuleException("A senha deve ter no mínimo 8 caractéres");
         }
 
         UserEntity newUser = modelMapper.map(register, UserEntity.class);
@@ -102,6 +115,18 @@ public class UserService {
 
         if (userWithNewEmail.isPresent() && !userWithNewEmail.get().getId().equals(existingUser.getId())) {
             throw new BusinessRuleException("Esse email já está em uso por outro usuário.");
+        }
+
+        if (update.getName().length() < 3) {
+            throw new BusinessRuleException("O nome não deve ter menos de 3 letras.");
+        }
+
+        if (update.getName().matches(".*\\d.*")) {
+            throw new BusinessRuleException("O nome não deve conter números");
+        }
+
+        if (update.getPassword().length() < 8) {
+            throw new BusinessRuleException("A senha deve ter no mínimo 8 caractéres");
         }
 
         modelMapper.map(update, existingUser);
