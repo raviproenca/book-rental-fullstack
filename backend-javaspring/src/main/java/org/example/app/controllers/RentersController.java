@@ -1,5 +1,6 @@
 package org.example.app.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.requests.RenterRequestDTO;
 import org.example.app.models.responses.RenterResponseDTO;
@@ -25,7 +26,7 @@ public class RentersController {
     }
 
     @PostMapping
-    public ResponseEntity<RenterResponseDTO> createRenter(@RequestBody RenterRequestDTO request) {
+    public ResponseEntity<RenterResponseDTO> createRenter(@Valid @RequestBody RenterRequestDTO request) {
         RenterResponseDTO newRenter = renterService.registerService(request);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -37,7 +38,7 @@ public class RentersController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RenterResponseDTO> updateRenter(@PathVariable("id") Long id, @RequestBody RenterRequestDTO request) {
+    public ResponseEntity<RenterResponseDTO> updateRenter(@PathVariable("id") Long id, @Valid @RequestBody RenterRequestDTO request) {
         RenterResponseDTO updatedRenter = renterService.updateService(id, request);
         return ResponseEntity.ok(updatedRenter);
     }

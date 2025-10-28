@@ -1,5 +1,6 @@
 package org.example.app.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.requests.BookRequestDTO;
 import org.example.app.models.responses.BookResponseDTO;
@@ -25,7 +26,7 @@ public class BooksController {
     }
 
     @PostMapping
-    public ResponseEntity<BookResponseDTO> createBook(@RequestBody BookRequestDTO request) {
+    public ResponseEntity<BookResponseDTO> createBook(@Valid @RequestBody BookRequestDTO request) {
         BookResponseDTO newBook = bookService.registerService(request);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -37,7 +38,7 @@ public class BooksController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookResponseDTO> updateBook(@PathVariable("id") Long id, @RequestBody BookRequestDTO request) {
+    public ResponseEntity<BookResponseDTO> updateBook(@PathVariable("id") Long id, @Valid @RequestBody BookRequestDTO request) {
         BookResponseDTO updatedBook = bookService.updateService(id, request);
         return ResponseEntity.ok(updatedBook);
     }

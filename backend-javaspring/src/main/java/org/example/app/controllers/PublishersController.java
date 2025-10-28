@@ -1,5 +1,6 @@
 package org.example.app.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.requests.PublisherRequestDTO;
 import org.example.app.models.responses.PublisherResponseDTO;
@@ -25,7 +26,7 @@ public class PublishersController {
     }
 
     @PostMapping
-    public ResponseEntity<PublisherResponseDTO> createPublisher(@RequestBody PublisherRequestDTO request) {
+    public ResponseEntity<PublisherResponseDTO> createPublisher(@Valid @RequestBody PublisherRequestDTO request) {
         PublisherResponseDTO newPublisher = publisherService.registerService(request);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -37,7 +38,7 @@ public class PublishersController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PublisherResponseDTO> updatePublisher(@PathVariable("id") Long id, @RequestBody PublisherRequestDTO request) {
+    public ResponseEntity<PublisherResponseDTO> updatePublisher(@PathVariable("id") Long id, @Valid @RequestBody PublisherRequestDTO request) {
         PublisherResponseDTO updatedPublisher = publisherService.updateService(id, request);
         return ResponseEntity.ok(updatedPublisher);
     }

@@ -1,5 +1,6 @@
 package org.example.app.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.requests.UserRequestDTO;
 import org.example.app.models.responses.UserResponseDTO;
@@ -26,7 +27,7 @@ public class UsersController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO request) {
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO request) {
         UserResponseDTO newUser = userService.registerService(request);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -38,7 +39,7 @@ public class UsersController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable("id") Long id, @RequestBody UserRequestDTO request) {
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable("id") Long id, @Valid @RequestBody UserRequestDTO request) {
         UserResponseDTO updatedUser = userService.updateService(id, request);
         return ResponseEntity.ok(updatedUser);
     }
