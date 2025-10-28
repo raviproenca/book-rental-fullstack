@@ -5,6 +5,7 @@ import org.example.app.models.requests.UserRequestDTO;
 import org.example.app.models.responses.UserResponseDTO;
 import org.example.app.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -43,8 +44,8 @@ public class UsersController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
-        userService.deleteService(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id, @AuthenticationPrincipal String loggedUserEmail) {
+        userService.deleteService(id, loggedUserEmail);
         return ResponseEntity.noContent().build();
     }
 }

@@ -74,18 +74,6 @@ public class UserService {
             throw new BusinessRuleException("Esse email já está em uso por outro usuário.");
         }
 
-        if (register.getName().length() < 3) {
-            throw new BusinessRuleException("O nome não deve ter menos de 3 letras.");
-        }
-
-        if (register.getName().matches(".*\\d.*")) {
-            throw new BusinessRuleException("O nome não deve conter números");
-        }
-
-        if (register.getPassword().length() < 8) {
-            throw new BusinessRuleException("A senha deve ter no mínimo 8 caractéres");
-        }
-
         UserEntity newUser = modelMapper.map(register, UserEntity.class);
         newUser.setPassword(passwordEncoder.encode(register.getPassword()));
 
@@ -117,18 +105,6 @@ public class UserService {
             throw new BusinessRuleException("Esse email já está em uso por outro usuário.");
         }
 
-        if (update.getName().length() < 3) {
-            throw new BusinessRuleException("O nome não deve ter menos de 3 letras.");
-        }
-
-        if (update.getName().matches(".*\\d.*")) {
-            throw new BusinessRuleException("O nome não deve conter números");
-        }
-
-        if (update.getPassword().length() < 8) {
-            throw new BusinessRuleException("A senha deve ter no mínimo 8 caractéres");
-        }
-
         modelMapper.map(update, existingUser);
 
         if (update.getPassword() != null && !update.getPassword().trim().isEmpty()) {
@@ -153,9 +129,12 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteService(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Usuário com o id " + id + " não encontrado.");
+    public void deleteService(Long id, String loggedUserEmail) {
+        UserEntity userToDelete = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário com o id " + id + " não encontrado."));
+
+        if (userToDelete.getEmail().equals(loggedUserEmail)) {
+            throw new BusinessRuleException("Você não pode excluir o seu próprio usuário enquanto logado.");
         }
 
         userRepository.deleteById(id);

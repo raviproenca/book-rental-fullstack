@@ -40,6 +40,7 @@ public class PublisherService {
 
     @Transactional
     public PublisherResponseDTO registerService(PublisherRequestDTO register) {
+
         if (publisherRepository.findByEmail(register.getEmail()).isPresent()) {
             throw new BusinessRuleException("Esse email já está em uso por outra editora.");
         }
@@ -62,10 +63,6 @@ public class PublisherService {
                 .orElseThrow(() -> new ResourceNotFoundException("Editora com o id " + id + " não encontrada."));
 
         Optional<PublisherEntity> publisherWithNewEmail = publisherRepository.findByEmail(update.getEmail());
-
-        if (publisherWithNewEmail.isPresent() && !publisherWithNewEmail.get().getId().equals(existingPublisher.getId())) {
-            throw new BusinessRuleException("Esse email já está em uso por outra editora.");
-        }
 
         modelMapper.map(update, existingPublisher);
         PublisherEntity updatedEntity = publisherRepository.save(existingPublisher);
