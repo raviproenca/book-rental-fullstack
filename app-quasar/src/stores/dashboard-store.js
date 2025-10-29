@@ -23,7 +23,7 @@ export const useDashboardsStore = defineStore('dashboards', () => {
       const response = await api.get(endpoint, { params })
       widgetRef.value.data = response.data
     } catch (err) {
-      widgetRef.value.error = err.response ? err.response.data.error : errorMessage
+      widgetRef.value.error = err.response ? err.response.data.message : errorMessage
     } finally {
       widgetRef.value.loading = false
     }

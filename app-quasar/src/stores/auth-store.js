@@ -32,7 +32,7 @@ export const useAuthStore = defineStore('auth', () => {
     } catch (error) {
       console.error('Erro no login:', error)
       if (error.response) {
-        throw new Error(error.response.data?.error || 'Email ou senha inválidos.')
+        throw new Error(error.response.data?.message || 'Email ou senha inválidos.')
       }
       throw new Error('Não foi possível conectar ao servidor.')
     }

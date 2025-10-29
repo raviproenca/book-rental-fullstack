@@ -129,11 +129,11 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteService(Long id, String loggedUserEmail) {
+    public void deleteService(Long id, UserEntity loggedUserEmail) {
         UserEntity userToDelete = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário com o id " + id + " não encontrado."));
 
-        if (userToDelete.getEmail().equals(loggedUserEmail)) {
+        if (userToDelete.getId().equals(loggedUserEmail.getId())) {
             throw new BusinessRuleException("Você não pode excluir o seu próprio usuário enquanto logado.");
         }
 

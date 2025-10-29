@@ -14,7 +14,7 @@ export const usePublishersStore = defineStore('publishers', () => {
       const response = await api.get('/publisher')
       publishers.value = response.data
     } catch (err) {
-      error.value = err.response ? err.response.data.error : 'Erro ao buscar editoras.'
+      error.value = err.response ? err.response.data.message : 'Erro ao buscar editoras.'
       throw err
     } finally {
       loading.value = false
@@ -28,7 +28,7 @@ export const usePublishersStore = defineStore('publishers', () => {
       await api.post('/publisher', publisherData)
       await fetchPublishers()
     } catch (err) {
-      error.value = err.response ? err.response.data.error : 'Erro ao registrar editoras.'
+      error.value = err.response ? err.response.data.message : 'Erro ao registrar editoras.'
       throw err
     } finally {
       loading.value = false
@@ -42,7 +42,7 @@ export const usePublishersStore = defineStore('publishers', () => {
       await api.put(`/publisher/${publisherId}`, publisherData)
       await fetchPublishers()
     } catch (err) {
-      error.value = err.response ? err.response.data.error : 'Erro ao editar editoras.'
+      error.value = err.response ? err.response.data.message : 'Erro ao editar editoras.'
       throw err
     } finally {
       loading.value = false
@@ -56,7 +56,7 @@ export const usePublishersStore = defineStore('publishers', () => {
       await api.delete(`/publisher/${publisherId}`)
       await fetchPublishers()
     } catch (err) {
-      error.value = err.response ? err.response.data.error : 'Erro ao deletar editoras.'
+      error.value = err.response ? err.response.data.message : 'Erro ao deletar editoras.'
       throw err
     } finally {
       loading.value = false

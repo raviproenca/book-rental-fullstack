@@ -14,7 +14,7 @@ export const useRentsStore = defineStore('rents', () => {
       const response = await api.get('/rent')
       rents.value = response.data
     } catch (err) {
-      error.value = err.response ? err.response.data.error : 'Erro ao buscar aluguéis.'
+      error.value = err.response ? err.response.data.message : 'Erro ao buscar aluguéis.'
       throw err
     } finally {
       loading.value = false
@@ -28,7 +28,7 @@ export const useRentsStore = defineStore('rents', () => {
       await api.post('/rent', rentData)
       await fetchRents()
     } catch (err) {
-      error.value = err.response ? err.response.data.error : 'Erro ao registrar aluguel.'
+      error.value = err.response ? err.response.data.message : 'Erro ao registrar aluguel.'
       throw err
     } finally {
       loading.value = false
@@ -42,7 +42,7 @@ export const useRentsStore = defineStore('rents', () => {
       await api.put(`/rent/update/${rentId}`, rentData)
       await fetchRents()
     } catch (err) {
-      error.value = err.response ? err.response.data.error : 'Erro ao editar aluguel.'
+      error.value = err.response ? err.response.data.message : 'Erro ao editar aluguel.'
       throw err
     } finally {
       loading.value = false
@@ -56,7 +56,7 @@ export const useRentsStore = defineStore('rents', () => {
       await api.put(`/rent/${rentId}`)
       await fetchRents()
     } catch (err) {
-      error.value = err.response ? err.response.data.error : 'Erro ao confirmar aluguel.'
+      error.value = err.response ? err.response.data.message : 'Erro ao confirmar aluguel.'
       throw err
     } finally {
       loading.value = false

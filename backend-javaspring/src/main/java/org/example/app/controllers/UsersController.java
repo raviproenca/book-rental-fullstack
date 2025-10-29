@@ -2,6 +2,7 @@ package org.example.app.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.app.models.entities.UserEntity;
 import org.example.app.models.requests.UserRequestDTO;
 import org.example.app.models.responses.UserResponseDTO;
 import org.example.app.services.UserService;
@@ -45,8 +46,8 @@ public class UsersController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id, @AuthenticationPrincipal String loggedUserEmail) {
-        userService.deleteService(id, loggedUserEmail);
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id, @AuthenticationPrincipal UserEntity loggedUser) {
+        userService.deleteService(id, loggedUser);
         return ResponseEntity.noContent().build();
     }
 }

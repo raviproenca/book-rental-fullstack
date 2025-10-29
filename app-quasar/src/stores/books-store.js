@@ -14,7 +14,7 @@ export const useBooksStore = defineStore('books', () => {
       const response = await api.get('/book')
       books.value = response.data
     } catch (err) {
-      error.value = err.response ? err.response.data.error : 'Erro ao buscar livros.'
+      error.value = err.response ? err.response.data.message : 'Erro ao buscar livros.'
       throw err
     } finally {
       loading.value = false
@@ -28,7 +28,7 @@ export const useBooksStore = defineStore('books', () => {
       await api.post('/book', bookData)
       await fetchBooks()
     } catch (err) {
-      error.value = err.response ? err.response.data.error : 'Erro ao registrar livros.'
+      error.value = err.response ? err.response.data.message : 'Erro ao registrar livros.'
       throw err
     } finally {
       loading.value = false
@@ -42,7 +42,7 @@ export const useBooksStore = defineStore('books', () => {
       await api.put(`/book/${bookId}`, bookData)
       await fetchBooks()
     } catch (err) {
-      error.value = err.response ? err.response.data.error : 'Erro ao editar livro.'
+      error.value = err.response ? err.response.data.message : 'Erro ao editar livro.'
       throw err
     } finally {
       loading.value = false
@@ -56,7 +56,7 @@ export const useBooksStore = defineStore('books', () => {
       await api.delete(`/book/${bookId}`)
       await fetchBooks()
     } catch (err) {
-      error.value = err.response ? err.response.data.error : 'Erro ao deletar livro'
+      error.value = err.response ? err.response.data.message : 'Erro ao deletar livro'
       throw err
     } finally {
       loading.value = false
