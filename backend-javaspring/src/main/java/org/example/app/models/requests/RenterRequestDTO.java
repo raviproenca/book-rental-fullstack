@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
 
 @Data
 @NoArgsConstructor
@@ -35,9 +36,6 @@ public class RenterRequestDTO {
     private String address;
 
     @NotBlank(message = "O CPF é obrigatório.")
-    @Pattern(
-            regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
-            message = "O CPF deve estar no formato XXX.XXX.XXX-XX."
-    )
+    @CPF(message = "Insira um CPF válido.")
     private String cpf;
 }

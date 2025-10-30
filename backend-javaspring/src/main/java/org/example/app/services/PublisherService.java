@@ -45,6 +45,10 @@ public class PublisherService {
             throw new BusinessRuleException("Esse email já está em uso por outra editora.");
         }
 
+        if (publisherRepository.findByName(register.getName()).isPresent()) {
+            throw new BusinessRuleException("Esse nome já está em uso por outra editora.");
+        }
+
         PublisherEntity entity = modelMapper.map(register, PublisherEntity.class);
         PublisherEntity savedEntity = publisherRepository.save(entity);
 
@@ -63,6 +67,16 @@ public class PublisherService {
                 .orElseThrow(() -> new ResourceNotFoundException("Editora com o id " + id + " não encontrada."));
 
         Optional<PublisherEntity> publisherWithNewEmail = publisherRepository.findByEmail(update.getEmail());
+
+        if (publisherWithNewEmail.isPresent() && !publisherWithNewEmail.get().getId().equals(existingPublisher.getId())) {
+            throw new BusinessRuleException("Já existe uma editora com esse email.");
+        }
+
+        Optional<PublisherEntity> publisherWithNewName = publisherRepository.findByName(update.getName());
+
+        if (publisherWithNewName.isPresent() && !publisherWithNewName.get().getId().equals(existingPublisher.getId())) {
+            throw new BusinessRuleException("Já existe um locatário com esse nome.");
+        }
 
         modelMapper.map(update, existingPublisher);
         PublisherEntity updatedEntity = publisherRepository.save(existingPublisher);

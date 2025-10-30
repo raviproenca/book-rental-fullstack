@@ -17,7 +17,7 @@ public class BookEntity {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String author;
 
     @Column(nullable = false, name = "launch_date")

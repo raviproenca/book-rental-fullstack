@@ -45,6 +45,10 @@ public class RenterService {
             throw new BusinessRuleException("Já existe um locatário com esse email.");
         }
 
+        if(renterRepository.findByCpf(register.getCpf()).isPresent()) {
+            throw new BusinessRuleException("Já existe um locatário com esse cpf.");
+        }
+
         RenterEntity entity = modelMapper.map(register, RenterEntity.class);
         RenterEntity savedEntity = renterRepository.save(entity);
 
@@ -68,6 +72,13 @@ public class RenterService {
         if (renterWithNewEmail.isPresent() && !renterWithNewEmail.get().getId().equals(existingRenter.getId())) {
             throw new BusinessRuleException("Já existe um locatário com esse email.");
         }
+
+        Optional<RenterEntity> renterWithNewCpf = renterRepository.findByCpf(update.getCpf());
+
+        if (renterWithNewCpf.isPresent() && !renterWithNewCpf.get().getId().equals(existingRenter.getId())) {
+            throw new BusinessRuleException("Já existe um locatário com esse cpf.");
+        }
+
 
         modelMapper.map(update, existingRenter);
         RenterEntity updatedEntity = renterRepository.save(existingRenter);

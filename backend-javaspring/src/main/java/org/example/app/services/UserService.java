@@ -2,6 +2,7 @@ package org.example.app.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.example.app.config.security.JwtService;
 import org.example.app.exceptions.BusinessRuleException;
 import org.example.app.exceptions.ResourceNotFoundException;
@@ -74,6 +75,10 @@ public class UserService {
             throw new BusinessRuleException("Esse email já está em uso por outro usuário.");
         }
 
+        if (userRepository.findByName(register.getName()).isPresent()) {
+            throw new BusinessRuleException("Esse nome já está em uso por outro usuário.");
+        }
+
         UserEntity newUser = modelMapper.map(register, UserEntity.class);
         newUser.setPassword(passwordEncoder.encode(register.getPassword()));
 
@@ -103,6 +108,12 @@ public class UserService {
 
         if (userWithNewEmail.isPresent() && !userWithNewEmail.get().getId().equals(existingUser.getId())) {
             throw new BusinessRuleException("Esse email já está em uso por outro usuário.");
+        }
+
+        Optional<UserEntity> userWithNewName = userRepository.findByName(update.getName());
+
+        if (userWithNewName.isPresent() && !userWithNewName.get().getId().equals(existingUser.getId())) {
+            throw new BusinessRuleException("Esse nome já está em uso por outro usuário.");
         }
 
         modelMapper.map(update, existingUser);
