@@ -59,6 +59,9 @@ public class RentService {
             throw new BusinessRuleException("Não há exemplares disponíveis para o livro '" + book.getName() + "'.");
         }
 
+        book.setTotalInUse(book.getTotalInUse() + 1);
+        bookRepository.save(book);
+
         RentEntity newRent = new RentEntity();
         newRent.setBookEntity(book);
         newRent.setRenterEntity(renter);
@@ -109,12 +112,15 @@ public class RentService {
 
     @Transactional
     public RentResponseDTO returnBookService(Long id) {
+
         RentEntity rent = rentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Aluguél com o id " + id + " não encontrado."));
 
         if (rent.getStatus() != RentStatus.RENTED && rent.getStatus() != RentStatus.LATE) {
             throw new BusinessRuleException("Este livro já foi devolvido ou o aluguel foi cancelado.");
         }
+
+        BookEntity book = rent.getBookEntity();
 
         LocalDate today = LocalDate.now();
         rent.setDevolutionDate(today);
@@ -126,6 +132,9 @@ public class RentService {
         }
 
         RentEntity updatedEntity = rentRepository.save(rent);
+
+        book.setTotalInUse(book.getTotalInUse() - 1);
+        bookRepository.save(book);
 
         return new RentResponseDTO(
                 updatedEntity.getId(),

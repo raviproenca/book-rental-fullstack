@@ -2,6 +2,7 @@ package org.example.app.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.responses.BookResponseDTO;
+import org.example.app.models.responses.MonthlyCountDTO;
 import org.example.app.models.responses.RenterRentCountDTO;
 import org.example.app.services.DashboardService;
 import org.springframework.http.ResponseEntity;
@@ -25,30 +26,30 @@ public class DashboardController {
     }
 
     @GetMapping("/deliveredInTimeQuantity")
-    public ResponseEntity<Long> deliveredInTime(int numberOfMonths) {
-        Long inTime = dashboardService.getDeliveredInTimeBooks(numberOfMonths);
+    public ResponseEntity<List<MonthlyCountDTO>> deliveredInTime(int numberOfMonths) {
+        List<MonthlyCountDTO> inTime = dashboardService.getDeliveredInTimeBooks(numberOfMonths);
         return ResponseEntity.ok(inTime);
     }
 
-    @GetMapping("deliveredWithDelayQuantity")
-    public ResponseEntity<Long> deliveredWithDelay(int numberOfMonths) {
-        Long withDelay = dashboardService.getDeliveredWithDelayBooks(numberOfMonths);
+    @GetMapping("/deliveredWithDelayQuantity")
+    public ResponseEntity<List<MonthlyCountDTO>> deliveredWithDelay(int numberOfMonths) {
+        List<MonthlyCountDTO> withDelay = dashboardService.getDeliveredWithDelayBooks(numberOfMonths);
         return ResponseEntity.ok(withDelay);
     }
 
-    @GetMapping("rentsLateQuantity")
+    @GetMapping("/rentsLateQuantity")
     public ResponseEntity<Long> lateBooks(int numberOfMonths) {
         Long late = dashboardService.getLateBooks(numberOfMonths);
         return ResponseEntity.ok(late);
     }
 
-    @GetMapping("rentsPerRenter")
+    @GetMapping("/rentsPerRenter")
     public ResponseEntity<List<RenterRentCountDTO>> perRenter() {
         List<RenterRentCountDTO> rents = dashboardService.getRentsPerRenter();
         return ResponseEntity.ok(rents);
     }
 
-    @GetMapping("rentsQuantity")
+    @GetMapping("/rentsQuantity")
     public ResponseEntity<Long> allRents(int numberOfMonths) {
         Long allRents = dashboardService.getAllRentsQuantity(numberOfMonths);
         return ResponseEntity.ok(allRents);

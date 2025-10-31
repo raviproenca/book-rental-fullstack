@@ -39,7 +39,7 @@ export const useRentsStore = defineStore('rents', () => {
     loading.value = true
     error.value = null
     try {
-      await api.put(`/rent/update/${rentId}`, rentData)
+      await api.put(`/rent/${rentId}`, rentData)
       await fetchRents()
     } catch (err) {
       error.value = err.response ? err.response.data.message : 'Erro ao editar aluguel.'
@@ -53,7 +53,7 @@ export const useRentsStore = defineStore('rents', () => {
     loading.value = true
     error.value = null
     try {
-      await api.put(`/rent/${rentId}`)
+      await api.put(`/rent/update/${rentId}`)
       await fetchRents()
     } catch (err) {
       error.value = err.response ? err.response.data.message : 'Erro ao confirmar aluguel.'

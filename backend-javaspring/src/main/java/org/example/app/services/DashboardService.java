@@ -3,8 +3,8 @@ package org.example.app.services;
 import lombok.RequiredArgsConstructor;
 import org.example.app.models.entities.BookEntity;
 import org.example.app.models.responses.BookResponseDTO;
+import org.example.app.models.responses.MonthlyCountDTO;
 import org.example.app.models.responses.RenterRentCountDTO;
-import org.example.app.repositories.BookRepository;
 import org.example.app.repositories.RentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,13 +37,17 @@ public class DashboardService {
         )).toList();
     }
 
-    public Long getDeliveredInTimeBooks(int numberOfMonths) {
-        LocalDate startDate = LocalDate.now().minusMonths(numberOfMonths);
+    public List<MonthlyCountDTO> getDeliveredInTimeBooks(int numberOfMonths) {
+        LocalDate startDate = LocalDate.now()
+                .minusMonths(numberOfMonths - 1)
+                .withDayOfMonth(1);
         return rentRepository.findDeliveredInTimeBooks(startDate);
     }
 
-    public Long getDeliveredWithDelayBooks(int numberOfMonths) {
-        LocalDate startDate = LocalDate.now().minusMonths(numberOfMonths);
+    public List<MonthlyCountDTO> getDeliveredWithDelayBooks(int numberOfMonths) {
+        LocalDate startDate = LocalDate.now()
+                .minusMonths(numberOfMonths - 1)
+                .withDayOfMonth(1);
         return rentRepository.findDeliveredWithDelayBooks(startDate);
     }
 
