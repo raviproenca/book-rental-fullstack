@@ -50,8 +50,8 @@
           </q-card-section>
         </q-card>
 
-        <div class="row justify-center">
-          <q-card class="dashboard-cards border-radius col-grow q-mr-sm">
+        <div class="row justify-center q-gutter-sm">
+          <q-card class="dashboard-cards border-radius col-grow">
             <q-card-section class="q-gutter-y-sm">
               <div class="row justify-between">
                 <q-icon name="o_library_add_check" size="sm" color="white" />
@@ -61,7 +61,7 @@
             </q-card-section>
           </q-card>
 
-          <q-card class="dashboard-cards border-radius col-grow q-ml-sm">
+          <q-card class="dashboard-cards border-radius col-grow">
             <q-card-section class="q-gutter-y-sm">
               <div class="row justify-between">
                 <q-icon name="schedule" size="sm" color="white" />
@@ -87,7 +87,7 @@
               clearable
             />
             <div class="q-mt-md col-grow">
-              <div style="position: relative; height: 98%; width: 100%">
+              <div style="position: relative; height: 98%; width: 100%; min-height: 300px">
                 <q-inner-loading :showing="isLoading" :label="t('dashboard.loading')" />
 
                 <div v-if="error" class="fullscreen text-center flex-center">
@@ -161,7 +161,7 @@ const thirdBook = computed(() => bookMoreRented.value.data?.[2])
 const rentedBooks = computed(() => rentsQuantity.value.data)
 const rentedLateBooks = computed(() => rentsLateQuantity.value.data)
 
-const perRenter = computed(() => rentsPerRenter.value.data?.content || [])
+const perRenter = computed(() => rentsPerRenter.value.data || [])
 
 const selectedRenter = ref(null)
 

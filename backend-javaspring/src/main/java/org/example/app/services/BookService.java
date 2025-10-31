@@ -77,13 +77,22 @@ public class BookService {
         BookEntity existingBook = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Livro com o id " + id + " não encontrado."));
 
+        PublisherEntity publisher = publisherRepository.findById(update.getPublisherId())
+                .orElseThrow(() -> new ResourceNotFoundException("Editora com id " + update.getPublisherId() + " não encontrada."));
+
         Optional<BookEntity> bookWithNewName = bookRepository.findByName(update.getName());
 
         if (bookWithNewName.isPresent() && !bookWithNewName.get().getId().equals(existingBook.getId())) {
             throw new BusinessRuleException("Já existe um livro com esse nome.");
         }
 
+        if (update.getTotalQuantity() < existingBook.getTotalInUse()) {
+            throw new BusinessRuleException("O estoque não pode ser menor do que o número de exemplares alugados");
+        }
+
         modelMapper.map(update, existingBook);
+
+        existingBook.setPublisher(publisher);
 
         BookEntity updatedEntity = bookRepository.save(existingBook);
 
