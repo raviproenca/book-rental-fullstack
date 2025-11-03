@@ -89,7 +89,7 @@ export default {
     atMoment: 'Libros actualmente alquilados',
     totalRents: 'Total de alquileres realizados',
     status: 'Estado del libro',
-    months: ['Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre'],
+    months: ['Noviembre', 'Octubre', 'Septiembre', 'Agosto', 'Julio'],
     in_time: 'Entregado a tiempo',
     with_delay: 'Entregado tarde',
     total: 'Total a tiempo (últimos 5 meses): 60 | Total retrasado: 25',

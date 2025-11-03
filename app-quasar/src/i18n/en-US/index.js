@@ -89,7 +89,7 @@ export default {
     atMoment: 'Rented books at the moment',
     totalRents: 'Total rentals',
     status: 'Books status',
-    months: ['May', 'June', 'July', 'August', 'September'],
+    months: ['November', 'October', 'September', 'August', 'July'],
     in_time: 'Delivered on time',
     with_delay: 'Delivered late',
     total: 'Total on time (last 5 months): 60 | Total late: 25',

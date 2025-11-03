@@ -212,19 +212,41 @@ const chartDoughnutData = computed(() => {
 })
 
 const chartBarData = computed(() => {
+  const mergedData = new Map()
+
+  deliveredInTimeQuantity.value.data?.forEach((item) => {
+    mergedData.set(item.monthYear, {
+      inTime: item.count,
+      withDelay: 0,
+    })
+  })
+
+  deliveredWithDelayQuantity.value.data?.forEach((item) => {
+    const existing = mergedData.get(item.monthYear) || { inTime: 0 }
+    mergedData.set(item.monthYear, {
+      inTime: existing.inTime,
+      withDelay: item.count,
+    })
+  })
+
+  const labels = Array.from(mergedData.keys()).sort((a, b) => b.localeCompare(a))
+
+  const inTimeData = labels.map((monthYear) => mergedData.get(monthYear)?.inTime || 0)
+  const withDelayData = labels.map((monthYear) => mergedData.get(monthYear)?.withDelay || 0)
+
   return {
     labels: tm('dashboard.months'),
 
     datasets: [
       {
         label: t('dashboard.in_time'),
-        data: [10, 15, 25, 35, 50],
+        data: inTimeData,
         backgroundColor: '#00C9FF',
         borderRadius: 6,
       },
       {
         label: t('dashboard.with_delay'),
-        data: [5, 10, 15, 20, 35],
+        data: withDelayData,
         backgroundColor: '#FF7F00',
         borderRadius: 6,
       },

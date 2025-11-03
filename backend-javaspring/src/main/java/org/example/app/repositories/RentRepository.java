@@ -34,7 +34,7 @@ public interface RentRepository extends JpaRepository<RentEntity, Long> {
 
     @Query("SELECT NEW org.example.app.models.responses.MonthlyCountDTO(COUNT(r), " + DATE_FORMAT_POSTGRES + ") " +
             "FROM RentEntity r " +
-            "WHERE r.status = 'IN_TIME' AND r.rentDate >= :startDate " +
+            "WHERE r.status = 'DELIVERED_WITH_DELAY' AND r.rentDate >= :startDate " +
             "GROUP BY " + DATE_FORMAT_POSTGRES + " " +
             "ORDER BY " + DATE_FORMAT_POSTGRES + " ASC")
     List<MonthlyCountDTO> findDeliveredWithDelayBooks(@Param("startDate") LocalDate startDate);

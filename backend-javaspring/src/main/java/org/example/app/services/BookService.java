@@ -54,7 +54,9 @@ public class BookService {
                 .orElseThrow(() -> new ResourceNotFoundException("Editora com id " + register.getPublisherId() + " não encontrada."));
 
         BookEntity newBook = modelMapper.map(register, BookEntity.class);
+
         newBook.setPublisher(publisher);
+
         if (newBook.getTotalInUse() == null) {
             newBook.setTotalInUse(0);
         }
@@ -90,8 +92,10 @@ public class BookService {
             throw new BusinessRuleException("O estoque não pode ser menor do que o número de exemplares alugados");
         }
 
-        modelMapper.map(update, existingBook);
-
+        existingBook.setName(update.getName());
+        existingBook.setAuthor(update.getAuthor());
+        existingBook.setTotalQuantity(update.getTotalQuantity());
+        existingBook.setLaunchDate(update.getLaunchDate());
         existingBook.setPublisher(publisher);
 
         BookEntity updatedEntity = bookRepository.save(existingBook);
