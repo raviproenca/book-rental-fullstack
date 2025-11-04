@@ -6,6 +6,9 @@ import org.example.app.models.entities.UserEntity;
 import org.example.app.models.requests.UserRequestDTO;
 import org.example.app.models.responses.UserResponseDTO;
 import org.example.app.services.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +25,11 @@ public class UsersController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        List<UserResponseDTO> users = userService.getUsersService();
+    public ResponseEntity<Page<UserResponseDTO>> getAllUsers(
+            @PageableDefault(size = 10, page = 0, sort = {"name"}) Pageable pageable,
+            @RequestParam(required = false) String search
+    ) {
+        Page<UserResponseDTO> users = userService.getUsersService(pageable, search);
         return ResponseEntity.ok(users);
     }
 

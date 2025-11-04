@@ -2,18 +2,20 @@ package org.example.app.repositories;
 
 import org.example.app.models.entities.BookEntity;
 import org.example.app.models.entities.RentEntity;
+import org.example.app.models.entities.UserEntity;
 import org.example.app.models.responses.MonthlyCountDTO;
 import org.example.app.models.responses.RenterRentCountDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface RentRepository extends JpaRepository<RentEntity, Long> {
+public interface RentRepository extends JpaRepository<RentEntity, Long>, JpaSpecificationExecutor<RentEntity> {
 
     public static final String DATE_FORMAT_POSTGRES = "TO_CHAR(r.rentDate, 'YYYY-MM')";
 

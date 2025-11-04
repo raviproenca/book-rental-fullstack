@@ -13,7 +13,11 @@ import org.example.app.models.enums.UserRole;
 import org.example.app.models.responses.AuthResponseDTO;
 import org.example.app.models.responses.UserResponseDTO;
 import org.example.app.repositories.UserRepository;
+import org.example.app.specifications.UserSpecifications;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -55,17 +59,12 @@ public class UserService {
     }
 
     @Transactional
-    public List<UserResponseDTO> getUsersService() {
-        List<UserEntity> entities = userRepository.findAll();
+    public Page<UserResponseDTO> getUsersService(Pageable pageable, String search) {
+        Specification<UserEntity> spec = UserSpecifications.byGlobalSearch(search);
 
-        return entities.stream()
-                .map(user -> new UserResponseDTO(
-                        user.getId(),
-                        user.getName(),
-                        user.getEmail(),
-                        user.getRole().name()
-                ))
-                .toList();
+        Page<UserEntity> userPage = userRepository.findAll(spec, pageable);
+
+        return userPage.map(entity -> modelMapper.map(entity, UserResponseDTO.class));
     }
 
     @Transactional
