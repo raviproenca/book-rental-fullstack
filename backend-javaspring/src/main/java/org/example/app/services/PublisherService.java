@@ -36,7 +36,13 @@ public class PublisherService {
 
         Page<PublisherEntity> publisherPage = publisherRepository.findAll(spec, pageable);
 
-        return publisherPage.map(entity -> modelMapper.map(entity, PublisherResponseDTO.class));
+        return publisherPage.map(entity -> new PublisherResponseDTO(
+                entity.getId(),
+                entity.getName(),
+                entity.getEmail(),
+                entity.getTelephone(),
+                entity.getSite()
+        ));
     }
 
     @Transactional

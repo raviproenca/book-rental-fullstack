@@ -2,6 +2,12 @@
   <TableComponent
     :columns="usersth"
     :rows="users"
+    :total-items="totalItems"
+    :loading="loading"
+    :fetch-data="fetchUsers"
+    :register-user="registerUser"
+    :edit-user="editUser"
+    :delete-user="deleteUser"
     :placeholder="t('pages.users.searchPlaceholder')"
     :area-type="'users'"
     >{{ t('pages.users.title') }}</TableComponent
@@ -9,7 +15,7 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue'
+import { computed } from 'vue'
 import { useUsersStore } from 'src/stores/users-store'
 import { storeToRefs } from 'pinia'
 import TableComponent from 'src/components/TableComponent.vue'
@@ -26,9 +32,6 @@ const usersth = computed(() => [
 ])
 
 const userStore = useUsersStore()
-const { users } = storeToRefs(userStore)
-
-onMounted(async () => {
-  userStore.fetchUsers()
-})
+const { users, totalItems, loading } = storeToRefs(userStore)
+const { fetchUsers, registerUser, editUser, deleteUser } = userStore
 </script>

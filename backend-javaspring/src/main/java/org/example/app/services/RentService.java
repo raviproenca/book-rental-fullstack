@@ -41,7 +41,15 @@ public class RentService {
 
         Page<RentEntity> rentPage = rentRepository.findAll(spec, pageable);
 
-        return rentPage.map(entity -> modelMapper.map(entity, RentResponseDTO.class));
+        return rentPage.map(entity -> new RentResponseDTO(
+                entity.getId(),
+                entity.getRenterEntity(),
+                entity.getBookEntity(),
+                entity.getRentDate(),
+                entity.getDevolutionDate(),
+                entity.getDeadLine(),
+                entity.getStatus().name()
+        ));
     }
 
     @Transactional

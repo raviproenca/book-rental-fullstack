@@ -64,7 +64,12 @@ public class UserService {
 
         Page<UserEntity> userPage = userRepository.findAll(spec, pageable);
 
-        return userPage.map(entity -> modelMapper.map(entity, UserResponseDTO.class));
+        return userPage.map(entity -> new UserResponseDTO(
+                entity.getId(),
+                entity.getName(),
+                entity.getEmail(),
+                entity.getRole().name()
+        ));
     }
 
     @Transactional

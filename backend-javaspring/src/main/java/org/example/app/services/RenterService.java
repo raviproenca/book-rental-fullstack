@@ -33,7 +33,14 @@ public class RenterService {
 
         Page<RenterEntity> renterPage = renterRepository.findAll(spec, pageable);
 
-        return renterPage.map(entity -> modelMapper.map(entity, RenterResponseDTO.class));
+        return renterPage.map(entity -> new RenterResponseDTO(
+                entity.getId(),
+                entity.getName(),
+                entity.getEmail(),
+                entity.getTelephone(),
+                entity.getAddress(),
+                entity.getCpf()
+        ));
     }
 
     @Transactional

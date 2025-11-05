@@ -40,7 +40,15 @@ public class BookService {
 
         Page<BookEntity> bookPage = bookRepository.findAll(spec, pageable);
 
-        return bookPage.map(entity -> modelMapper.map(entity, BookResponseDTO.class));
+        return bookPage.map(entity -> new BookResponseDTO(
+                entity.getId(),
+                entity.getName(),
+                entity.getAuthor(),
+                entity.getLaunchDate(),
+                entity.getTotalQuantity(),
+                entity.getTotalInUse(),
+                entity.getPublisher()
+        ));
     }
 
     @Transactional

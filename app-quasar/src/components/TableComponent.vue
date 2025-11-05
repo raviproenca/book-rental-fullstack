@@ -362,92 +362,41 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-function formatDateToBR(dateString) {
-  if (!dateString) {
-    return null
-  }
-  const parts = dateString.split('-')
-  if (parts.length !== 3) return dateString
-  const [year, month, day] = parts
-  return `${day}/${month}/${year}`
-}
-
 const props = defineProps({
-  rows: {
-    type: Array,
-    required: true,
-  },
-  columns: {
-    type: Array,
-    required: true,
-  },
-  placeholder: {
-    type: String,
-    required: true,
-  },
-  areaType: {
-    type: String,
-    required: true,
-  },
-})
+  // Dados do Servidor
+  rows: { type: Array, required: true },
+  totalItems: { type: Number, required: true },
+  loading: { type: Boolean, required: true },
+  fetchData: { type: Function, required: true },
 
-const visibleColumns = computed(() => {
-  return props.columns.filter((col) => col.name !== 'password')
+  // Funções de Ação (CRUD) da Store
+  registerUser: { type: Function, required: false },
+  editUser: { type: Function, required: false },
+  deleteUser: { type: Function, required: false },
+
+  // Props de Configuração da Tabela
+  columns: { type: Array, required: true },
+  placeholder: { type: String, default: '' },
+  areaType: { type: String, required: true },
 })
 
 // Filtro
 const filter = ref('')
 
-const filteredRows = computed(() => {
-  const q = filter.value.trim().toLowerCase()
-  if (!q) return props.rows
-
-  return props.rows.filter((row) => {
-    const searchableContent = [
-      row.name,
-      row.email,
-      row.role === 'USER' ? 'Leitor' : 'Editor',
-      row.telephone,
-      row.site,
-      row.author,
-      row.publisher?.name,
-      formatDateToBR(row.launchDate),
-      row.totalQuantity,
-      row.totalInUse,
-      row.address,
-      row.cpf,
-      row.book?.name,
-      row.renter?.name,
-      formatDateToBR(row.rentDate),
-      formatDateToBR(row.deadLine),
-      formatDateToBR(row.devolutionDate),
-      row.status === 'RENTED'
-        ? t('common.status.rented')
-        : row.status === 'IN_TIME'
-          ? t('common.status.in_time')
-          : row.status === 'LATE'
-            ? t('common.status.late')
-            : row.status === 'DELIVERED_WITH_DELAY'
-              ? t('common.status.delivered_with_delay')
-              : '',
-    ]
-      .join(' ')
-      .toLowerCase()
-
-    return searchableContent.includes(q)
-  })
-})
-
 // Paginação
 const pagination = ref({
-  sortBy: 'name',
-  descending: true,
+  sortBy: 'id',
+  descending: false,
   page: 1,
   rowsPerPage: 10,
+  rowsNumber: 0
 })
-const pagesNumber = computed(() => {
-  return Math.ceil(filteredRows.value.length / pagination.value.rowsPerPage)
-})
+
+const debouncedFetch = debounce((newFilter) => {
+  // Sempre que o filtro muda, voltamos para a primeira página
+  pagination.value.page = 1
+  requestData({ pagination: pagination.value }, newFilter)
+}, 500)
 
 // Ações
 const showModal = ref(false)
@@ -498,4 +447,18 @@ function translateStatus(status) {
       ''
   }
 }
+
+function formatDateToBR(dateString) {
+  if (!dateString) {
+    return null
+  }
+  const parts = dateString.split('-')
+  if (parts.length !== 3) return dateString
+  const [year, month, day] = parts
+  return `${day}/${month}/${year}`
+}
+
+const visibleColumns = computed(() => {
+  return props.columns.filter((col) => col.name !== 'password')
+})
 </script>
