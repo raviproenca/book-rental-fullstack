@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.app.models.requests.RenterRequestDTO;
 import org.example.app.models.responses.RenterResponseDTO;
 import org.example.app.services.RenterService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -20,8 +23,11 @@ public class RentersController {
     private final RenterService renterService;
 
     @GetMapping
-    public ResponseEntity<List<RenterResponseDTO>> getAllRenters() {
-        List<RenterResponseDTO> renters = renterService.getRentersService();
+    public ResponseEntity<Page<RenterResponseDTO>> getAllRenters(
+            @PageableDefault(size = 10, page = 0, sort = {"name"}) Pageable pageable,
+            @RequestParam(required = false) String search
+    ) {
+        Page<RenterResponseDTO> renters = renterService.getRentersService(pageable, search);
         return ResponseEntity.ok(renters);
     }
 

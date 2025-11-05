@@ -6,12 +6,19 @@ import org.example.app.exceptions.BusinessRuleException;
 import org.example.app.exceptions.ResourceNotFoundException;
 import org.example.app.models.entities.PublisherEntity;
 import org.example.app.models.entities.BookEntity;
+import org.example.app.models.entities.UserEntity;
 import org.example.app.models.requests.BookRequestDTO;
 import org.example.app.models.responses.BookResponseDTO;
+import org.example.app.models.responses.UserResponseDTO;
 import org.example.app.repositories.BookRepository;
 import org.example.app.repositories.PublisherRepository;
 import org.example.app.repositories.RentRepository;
+import org.example.app.specifications.BookSpecifications;
+import org.example.app.specifications.UserSpecifications;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,20 +35,12 @@ public class BookService {
     private final ModelMapper modelMapper;
 
     @Transactional
-    public List<BookResponseDTO> getBooksService() {
-        List<BookEntity> entities = bookRepository.findAll();
+    public Page<BookResponseDTO> getBooksService(Pageable pageable, String search) {
+        Specification<BookEntity> spec = BookSpecifications.byGlobalSearch(search);
 
-        return entities.stream()
-                .map(book -> new BookResponseDTO(
-                        book.getId(),
-                        book.getName(),
-                        book.getAuthor(),
-                        book.getLaunchDate(),
-                        book.getTotalQuantity(),
-                        book.getTotalInUse(),
-                        book.getPublisher()
-                ))
-                .toList();
+        Page<BookEntity> bookPage = bookRepository.findAll(spec, pageable);
+
+        return bookPage.map(entity -> modelMapper.map(entity, BookResponseDTO.class));
     }
 
     @Transactional

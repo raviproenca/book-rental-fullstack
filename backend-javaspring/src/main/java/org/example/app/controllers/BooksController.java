@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.app.models.requests.BookRequestDTO;
 import org.example.app.models.responses.BookResponseDTO;
 import org.example.app.services.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -20,8 +23,11 @@ public class BooksController {
     private final BookService bookService;
 
     @GetMapping
-    public ResponseEntity<List<BookResponseDTO>> getAllBooks() {
-        List<BookResponseDTO> books = bookService.getBooksService();
+    public ResponseEntity<Page<BookResponseDTO>> getAllBooks(
+            @PageableDefault(size = 10, page = 0, sort = {"name"}) Pageable pageable,
+            @RequestParam(required = false) String search
+    ) {
+        Page<BookResponseDTO> books = bookService.getBooksService(pageable, search);
         return ResponseEntity.ok(books);
     }
 

@@ -9,7 +9,11 @@ import org.example.app.models.requests.RenterRequestDTO;
 import org.example.app.models.responses.RenterResponseDTO;
 import org.example.app.repositories.RentRepository;
 import org.example.app.repositories.RenterRepository;
+import org.example.app.specifications.RenterSpecifications;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,19 +28,12 @@ public class RenterService {
     private final ModelMapper modelMapper;
 
     @Transactional
-    public List<RenterResponseDTO> getRentersService() {
-        List<RenterEntity> entities = renterRepository.findAll();
+    public Page<RenterResponseDTO> getRentersService(Pageable pageable, String search) {
+        Specification<RenterEntity> spec = RenterSpecifications.byGlobalSearch(search);
 
-        return entities.stream()
-                .map(renter -> new RenterResponseDTO(
-                        renter.getId(),
-                        renter.getName(),
-                        renter.getEmail(),
-                        renter.getTelephone(),
-                        renter.getAddress(),
-                        renter.getCpf()
-                ))
-                .toList();
+        Page<RenterEntity> renterPage = renterRepository.findAll(spec, pageable);
+
+        return renterPage.map(entity -> modelMapper.map(entity, RenterResponseDTO.class));
     }
 
     @Transactional

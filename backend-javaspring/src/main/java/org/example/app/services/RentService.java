@@ -7,14 +7,21 @@ import org.example.app.exceptions.ResourceNotFoundException;
 import org.example.app.models.entities.BookEntity;
 import org.example.app.models.entities.RentEntity;
 import org.example.app.models.entities.RenterEntity;
+import org.example.app.models.entities.UserEntity;
 import org.example.app.models.enums.RentStatus;
 import org.example.app.models.requests.RentRequestDTO;
 import org.example.app.models.requests.RentUpdateDTO;
 import org.example.app.models.responses.RentResponseDTO;
+import org.example.app.models.responses.UserResponseDTO;
 import org.example.app.repositories.BookRepository;
 import org.example.app.repositories.RentRepository;
 import org.example.app.repositories.RenterRepository;
+import org.example.app.specifications.RentSpecifications;
+import org.example.app.specifications.UserSpecifications;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
@@ -29,20 +36,12 @@ public class RentService {
     private final ModelMapper modelMapper;
 
     @Transactional
-    public List<RentResponseDTO> getRentsService() {
-        List<RentEntity> entities = rentRepository.findAll();
+    public Page<RentResponseDTO> getRentsService(Pageable pageable, String search) {
+        Specification<RentEntity> spec = RentSpecifications.byGlobalSearch(search);
 
-        return entities.stream()
-                .map(rent -> new RentResponseDTO(
-                        rent.getId(),
-                        rent.getRenterEntity(),
-                        rent.getBookEntity(),
-                        rent.getDeadLine(),
-                        rent.getDevolutionDate(),
-                        rent.getRentDate(),
-                        rent.getStatus().name()
-                ))
-                .toList();
+        Page<RentEntity> rentPage = rentRepository.findAll(spec, pageable);
+
+        return rentPage.map(entity -> modelMapper.map(entity, RentResponseDTO.class));
     }
 
     @Transactional

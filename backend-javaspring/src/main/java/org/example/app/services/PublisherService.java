@@ -4,12 +4,19 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.app.exceptions.BusinessRuleException;
 import org.example.app.exceptions.ResourceNotFoundException;
+import org.example.app.models.entities.UserEntity;
 import org.example.app.models.requests.PublisherRequestDTO;
 import org.example.app.models.entities.PublisherEntity;
 import org.example.app.models.responses.PublisherResponseDTO;
+import org.example.app.models.responses.UserResponseDTO;
 import org.example.app.repositories.BookRepository;
 import org.example.app.repositories.PublisherRepository;
+import org.example.app.specifications.PublisherSpecifications;
+import org.example.app.specifications.UserSpecifications;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,18 +31,12 @@ public class PublisherService {
     private final ModelMapper modelMapper;
 
     @Transactional
-    public List<PublisherResponseDTO> getPublishersService() {
-        List<PublisherEntity> entities = publisherRepository.findAll();
+    public Page<PublisherResponseDTO> getPublishersService(Pageable pageable, String search) {
+        Specification<PublisherEntity> spec = PublisherSpecifications.byGlobalSearch(search);
 
-        return entities.stream()
-                .map(publisher -> new PublisherResponseDTO(
-                        publisher.getId(),
-                        publisher.getName(),
-                        publisher.getEmail(),
-                        publisher.getTelephone(),
-                        publisher.getSite()
-                ))
-                .toList();
+        Page<PublisherEntity> publisherPage = publisherRepository.findAll(spec, pageable);
+
+        return publisherPage.map(entity -> modelMapper.map(entity, PublisherResponseDTO.class));
     }
 
     @Transactional
