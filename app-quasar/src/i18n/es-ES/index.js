@@ -42,6 +42,9 @@ export default {
     exclude: 'Eliminar',
     confirm: 'Confirmar',
     deleteSuccess: 'Eliminación exitosa',
+    registerSuccess: 'Registro exitoso',
+    editSuccess: 'Actualización exitosa',
+    confirmSucces: 'Devolución exitosa',
     roles: {
       reader: 'Lector',
       editor: 'Editor',

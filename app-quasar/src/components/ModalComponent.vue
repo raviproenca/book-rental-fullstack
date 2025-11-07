@@ -291,6 +291,7 @@ watch(
       : {
           name: '',
           email: '',
+          password: '',
           role: null,
           telephone: '',
           site: '',
@@ -589,7 +590,15 @@ const emailRules = computed(() => [
   (val) => isUnique(val, 'email', props.existingItems, props.mode, props.row),
 ])
 
-const passwordRules = computed(() => [(val) => val.length >= 8 || t('rules.password.min')])
+const passwordRules = computed(() => [
+  (val) => {
+    if (!val || val.length === 0) {
+      return t('rules.required')
+    }
+
+    return val.length >= 8 || t('rules.password.min')
+  },
+])
 
 const siteRules = computed(() => {
   return [

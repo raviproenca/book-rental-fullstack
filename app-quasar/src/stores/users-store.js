@@ -36,8 +36,8 @@ export const useUsersStore = defineStore('users', () => {
         return fetchUsers({ ...paginationData, page: 1 }, searchFilter)
       }
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao buscar usuários.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao buscar usuários.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }
@@ -49,8 +49,8 @@ export const useUsersStore = defineStore('users', () => {
     try {
       await api.post('/user', userData)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao registrar usuários.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao registrar usuários.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }
@@ -62,8 +62,8 @@ export const useUsersStore = defineStore('users', () => {
     try {
       await api.put(`/user/${userId}`, userData)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao editar usuários.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao editar usuários.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }
@@ -75,8 +75,8 @@ export const useUsersStore = defineStore('users', () => {
     try {
       await api.delete(`/user/${userId}`)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao deletar usuários.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao deletar usuários.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }

@@ -20,15 +20,7 @@
           {{ $t('header.title') }}
         </q-toolbar-title>
 
-        <q-btn
-          dense
-          round
-          size="lg"
-          icon="o_person"
-          color="white"
-          text-color="black"
-          @click="openUserModal()"
-        >
+        <q-btn dense round size="lg" icon="o_person" color="white" text-color="black">
           <q-menu class="border-radius">
             <UserModalComponent />
           </q-menu>

@@ -36,8 +36,8 @@ export const useRentsStore = defineStore('rents', () => {
         return fetchRents({ ...paginationData, page: 1 }, searchFilter)
       }
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao buscar aluguéis.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao buscar aluguéis.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }
@@ -49,8 +49,8 @@ export const useRentsStore = defineStore('rents', () => {
     try {
       await api.post('/rent', rentData)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao registrar aluguel.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao registrar aluguel.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }
@@ -62,8 +62,8 @@ export const useRentsStore = defineStore('rents', () => {
     try {
       await api.put(`/rent/${rentId}`, rentData)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao editar aluguel.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao editar aluguel.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }
@@ -75,8 +75,8 @@ export const useRentsStore = defineStore('rents', () => {
     try {
       await api.put(`/rent/update/${rentId}`)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao confirmar aluguel.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao confirmar aluguel.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }

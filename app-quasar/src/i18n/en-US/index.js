@@ -42,6 +42,9 @@ export default {
     exclude: 'Delete',
     confirm: 'Confirm',
     deleteSuccess: 'Successful deletion',
+    registerSuccess: 'Successful registration',
+    editSuccess: 'Successful update',
+    confirmSuccess: 'Successful devolution',
     roles: {
       reader: 'Reader',
       editor: 'Editor',

@@ -36,8 +36,8 @@ export const useRentersStore = defineStore('renters', () => {
         return fetchRenters({ ...paginationData, page: 1 }, searchFilter)
       }
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao buscar locatários.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao buscar locatários.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }
@@ -49,8 +49,8 @@ export const useRentersStore = defineStore('renters', () => {
     try {
       await api.post('/renter', renterData)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao registrar locatário.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao registrar locatário.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }
@@ -62,8 +62,8 @@ export const useRentersStore = defineStore('renters', () => {
     try {
       await api.put(`/renter/${renterId}`, renterData)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao editar locatário.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao editar locatário.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }
@@ -75,8 +75,8 @@ export const useRentersStore = defineStore('renters', () => {
     try {
       await api.delete(`/renter/${renterId}`)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao deletar locatário.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao deletar locatário.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }

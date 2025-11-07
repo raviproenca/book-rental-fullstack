@@ -36,8 +36,8 @@ export const useBooksStore = defineStore('books', () => {
         return fetchBooks({ ...paginationData, page: 1 }, searchFilter)
       }
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao buscar livros.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao buscar livros.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }
@@ -49,8 +49,8 @@ export const useBooksStore = defineStore('books', () => {
     try {
       await api.post('/book', bookData)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao registrar livro.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao registrar livro.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }
@@ -62,8 +62,8 @@ export const useBooksStore = defineStore('books', () => {
     try {
       await api.put(`/book/${bookId}`, bookData)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao editar livro.'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao editar livro.'
+      throw new Error(message)
     } finally {
       loading.value = false
     }
@@ -75,8 +75,8 @@ export const useBooksStore = defineStore('books', () => {
     try {
       await api.delete(`/book/${bookId}`)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao deletar livro'
-      throw err
+      const message = err.response ? err.response.data.message : 'Erro ao deletar livro'
+      throw new Error(message)
     } finally {
       loading.value = false
     }

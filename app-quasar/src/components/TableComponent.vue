@@ -406,8 +406,15 @@ const pagesNumber = computed(() => {
 
 // Função para busca de dados
 const callFetchData = async () => {
-  await props.fetchData(pagination.value, filter.value)
-  pagination.value.rowsNumber = props.totalItems
+  try {
+    await props.fetchData(pagination.value, filter.value)
+    pagination.value.rowsNumber = props.totalItems
+  } catch (err) {
+    $q.notify({
+      type: 'negative',
+      message: err.message || 'Não foi possível obter os dados da tabela',
+    })
+  }
 }
 
 // Função para ordenação
