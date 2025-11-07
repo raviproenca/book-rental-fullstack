@@ -346,7 +346,7 @@
             :columns="columns"
             :existingItems="props.rows"
             @close-modal="closeModal"
-            @saved="callFetchData"
+            @data-changed="callFetchData"
           />
         </q-dialog>
       </template>
@@ -377,9 +377,9 @@ const props = defineProps({
   fetchData: { type: Function, required: true },
 
   // Funções de Ação (CRUD) da Store
-  registerUser: { type: Function, required: false },
-  editUser: { type: Function, required: false },
-  deleteUser: { type: Function, required: false },
+  registerData: { type: Function, required: false },
+  editData: { type: Function, required: false },
+  deleteData: { type: Function, required: false },
 
   // Props de Configuração da Tabela
   columns: { type: Array, required: true },

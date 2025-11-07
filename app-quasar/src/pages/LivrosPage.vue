@@ -2,6 +2,12 @@
   <TableComponent
     :columns="booksth"
     :rows="books"
+    :total-items="totalItems"
+    :loading="loading"
+    :fetch-data="fetchBooks"
+    :register-data="registerBook"
+    :edit-data="editBook"
+    :delete-data="deleteBook"
     :placeholder="t('pages.books.searchPlaceholder')"
     area-type="books"
     >{{ t('pages.books.title') }}</TableComponent
@@ -9,7 +15,7 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue'
+import { computed } from 'vue'
 import { useBooksStore } from 'src/stores/books-store'
 import TableComponent from 'src/components/TableComponent.vue'
 import { storeToRefs } from 'pinia'
@@ -55,9 +61,6 @@ const booksth = computed(() => [
 ])
 
 const bookStore = useBooksStore()
-const { books } = storeToRefs(bookStore)
-
-onMounted(async () => {
-  bookStore.fetchBooks()
-})
+const { books, totalItems, loading } = storeToRefs(bookStore)
+const { fetchBooks, registerBook, editBook, deleteBook } = bookStore
 </script>

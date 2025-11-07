@@ -5,9 +5,9 @@
     :total-items="totalItems"
     :loading="loading"
     :fetch-data="fetchUsers"
-    :register-user="registerUser"
-    :edit-user="editUser"
-    :delete-user="deleteUser"
+    :register-data="registerUser"
+    :edit-data="editUser"
+    :delete-data="deleteUser"
     :placeholder="t('pages.users.searchPlaceholder')"
     :area-type="'users'"
     >{{ t('pages.users.title') }}</TableComponent

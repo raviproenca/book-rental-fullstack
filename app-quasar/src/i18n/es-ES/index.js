@@ -41,6 +41,7 @@ export default {
     update: 'Actualización',
     exclude: 'Eliminar',
     confirm: 'Confirmar',
+    deleteSuccess: 'Eliminación exitosa',
     roles: {
       reader: 'Lector',
       editor: 'Editor',

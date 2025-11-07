@@ -420,15 +420,27 @@ const save = async () => {
   const store = activeStore.value
   if (!store) return console.error('Store não encontrada para a área:', props.area)
 
-  if (props.area === 'users') await store.registerUser(payload)
-  else if (props.area === 'publishers') await store.registerPublisher(payload)
-  else if (props.area === 'books') await store.registerBook(payload)
-  else if (props.area === 'renters') await store.registerRenter(payload)
-  else if (props.area === 'rents') await store.registerRent(payload)
-  else console.log('ERRO!!')
+  try {
+    if (props.area === 'users') await store.registerUser(payload)
+    else if (props.area === 'publishers') await store.registerPublisher(payload)
+    else if (props.area === 'books') await store.registerBook(payload)
+    else if (props.area === 'renters') await store.registerRenter(payload)
+    else if (props.area === 'rents') await store.registerRent(payload)
+    else console.log('ERRO!!')
 
-  emit('dataChanged')
-  emit('close-modal')
+    emit('dataChanged')
+    emit('close-modal')
+
+    $q.notify({
+      type: 'positive',
+      message: t('common.registerSuccess'),
+    })
+  } catch (err) {
+    $q.notify({
+      type: 'negative',
+      message: err.message || 'Não foi possível editar.',
+    })
+  }
 }
 
 const edit = async () => {
@@ -460,15 +472,27 @@ const edit = async () => {
   const store = activeStore.value
   if (!store) return console.error('Store não encontrada para a área:', props.area)
 
-  if (props.area === 'users') await store.editUser(props.row.id, payload)
-  else if (props.area === 'publishers') await store.editPublisher(props.row.id, payload)
-  else if (props.area === 'books') await store.editBook(props.row.id, payload)
-  else if (props.area === 'renters') await store.editRenter(props.row.id, payload)
-  else if (props.area === 'rents') await store.editRent(props.row.id, payload)
-  else console.log('ERRO!!')
+  try {
+    if (props.area === 'users') await store.editUser(props.row.id, payload)
+    else if (props.area === 'publishers') await store.editPublisher(props.row.id, payload)
+    else if (props.area === 'books') await store.editBook(props.row.id, payload)
+    else if (props.area === 'renters') await store.editRenter(props.row.id, payload)
+    else if (props.area === 'rents') await store.editRent(props.row.id, payload)
+    else console.log('ERRO!!')
 
-  emit('dataChanged')
-  emit('close-modal')
+    emit('dataChanged')
+    emit('close-modal')
+
+    $q.notify({
+      type: 'positive',
+      message: t('common.editSuccess'),
+    })
+  } catch (err) {
+    $q.notify({
+      type: 'negative',
+      message: err.message || 'Não foi possível editar.',
+    })
+  }
 }
 
 const remove = async () => {
@@ -490,17 +514,16 @@ const remove = async () => {
 
     emit('dataChanged')
     emit('close-modal')
+
     $q.notify({
       type: 'positive',
       message: t('common.deleteSuccess'),
     })
-  } catch {
-    if (store.error) {
-      $q.notify({
-        type: 'negative',
-        message: store.error,
-      })
-    }
+  } catch (err) {
+    $q.notify({
+      type: 'negative',
+      message: err.message || 'Não foi possível deletar.',
+    })
   }
 }
 
@@ -508,11 +531,23 @@ const confirm = async () => {
   const store = activeStore.value
   if (!store) return console.error('Store não encontrada para a área:', props.area)
 
-  if (props.area === 'rents') await store.confirmRent(props.row.id)
-  else console.log('ERRO!!')
+  try {
+    if (props.area === 'rents') await store.confirmRent(props.row.id)
+    else console.log('ERRO!!')
 
-  emit('dataChanged')
-  emit('close-modal')
+    emit('dataChanged')
+    emit('close-modal')
+
+    $q.notify({
+      type: 'positive',
+      message: t('common.confirmSuccess'),
+    })
+  } catch (err) {
+    $q.notify({
+      type: 'negative',
+      message: err.message || 'Não foi possível devolver o livro.',
+    })
+  }
 }
 
 const requiredRule = [(val) => (val && String(val).length > 0) || t('rules.required')]

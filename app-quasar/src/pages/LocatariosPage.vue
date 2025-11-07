@@ -2,6 +2,12 @@
   <TableComponent
     :columns="rentersth"
     :rows="renters"
+    :total-items="totalItems"
+    :loading="loading"
+    :fetch-data="fetchRenters"
+    :register-data="registerRenter"
+    :edit-data="editRenter"
+    :delete-data="deleteRenter"
     :placeholder="t('pages.renters.searchPlaceholder')"
     area-type="renters"
     >{{ t('pages.renters.title') }}</TableComponent
@@ -9,7 +15,7 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue'
+import { computed } from 'vue'
 import { useRentersStore } from 'src/stores/renters-store'
 import TableComponent from 'src/components/TableComponent.vue'
 import { storeToRefs } from 'pinia'
@@ -33,9 +39,6 @@ const rentersth = computed(() => [
 ])
 
 const renterStore = useRentersStore()
-const { renters } = storeToRefs(renterStore)
-
-onMounted(async () => {
-  renterStore.fetchRenters()
-})
+const { renters, totalItems, loading } = storeToRefs(renterStore)
+const { fetchRenters, registerRenter, editRenter, deleteRenter } = renterStore
 </script>

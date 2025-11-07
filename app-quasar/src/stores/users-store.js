@@ -1,14 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { api } from 'boot/api'
-import { useQuasar } from 'quasar'
 
 export const useUsersStore = defineStore('users', () => {
   const users = ref([])
   const totalItems = ref(0)
   const loading = ref(false)
   const error = ref(null)
-  const $q = useQuasar()
 
   const fetchUsers = async (paginationData, searchFilter) => {
     loading.value = true
@@ -39,7 +37,6 @@ export const useUsersStore = defineStore('users', () => {
       }
     } catch (err) {
       error.value = err.response ? err.response.data.message : 'Erro ao buscar usuários.'
-      $q.notify({ type: 'negative', message: error.value })
       throw err
     } finally {
       loading.value = false
@@ -52,7 +49,7 @@ export const useUsersStore = defineStore('users', () => {
     try {
       await api.post('/user', userData)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao buscar usuários.'
+      error.value = err.response ? err.response.data.message : 'Erro ao registrar usuários.'
       throw err
     } finally {
       loading.value = false
@@ -65,7 +62,7 @@ export const useUsersStore = defineStore('users', () => {
     try {
       await api.put(`/user/${userId}`, userData)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao buscar usuários.'
+      error.value = err.response ? err.response.data.message : 'Erro ao editar usuários.'
       throw err
     } finally {
       loading.value = false
@@ -78,7 +75,7 @@ export const useUsersStore = defineStore('users', () => {
     try {
       await api.delete(`/user/${userId}`)
     } catch (err) {
-      error.value = err.response ? err.response.data.message : 'Erro ao buscar usuários.'
+      error.value = err.response ? err.response.data.message : 'Erro ao deletar usuários.'
       throw err
     } finally {
       loading.value = false

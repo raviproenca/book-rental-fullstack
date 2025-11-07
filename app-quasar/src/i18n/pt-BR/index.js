@@ -41,6 +41,10 @@ export default {
     update: 'Atualizar',
     exclude: 'Excluir',
     confirm: 'Confirmar',
+    deleteSuccess: 'Exclusão bem sucedida',
+    registerSuccess: 'Registro bem sucedido',
+    editSuccess: 'Edição bem sucedida',
+    confirmSuccess: 'Devolução bem sucedida',
     roles: {
       reader: 'Leitor',
       editor: 'Editor',
