@@ -15,7 +15,7 @@ export const useUsersStore = defineStore('users', () => {
     error.value = null
     try {
       const page = paginationData.page - 1
-      const size = 10
+      const size = paginationData.rowsPerPage || 10
 
       let sort = null
       if (paginationData.sortBy) {
@@ -90,6 +90,7 @@ export const useUsersStore = defineStore('users', () => {
 
   return {
     users,
+    totalItems,
     loading,
     error,
     fetchUsers,

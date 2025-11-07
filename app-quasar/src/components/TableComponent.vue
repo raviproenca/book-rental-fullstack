@@ -17,6 +17,8 @@
           class="input-style col-grow"
           rounded
           dense
+          debounce="300"
+          @update:model-value="onFilterChange"
         >
           <template v-slot:append>
             <q-icon name="search" />
@@ -356,11 +358,13 @@
 </style>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import ModalComponent from './ModalComponent.vue'
 import { useI18n } from 'vue-i18n'
+import { useQuasar } from 'quasar'
 
 const { t } = useI18n()
+const $q = useQuasar()
 
 const props = defineProps({
   // Dados do Servidor
@@ -389,14 +393,37 @@ const pagination = ref({
   descending: false,
   page: 1,
   rowsPerPage: 10,
-  rowsNumber: 0
+  rowsNumber: 0,
 })
 
-const debouncedFetch = debounce((newFilter) => {
-  // Sempre que o filtro muda, voltamos para a primeira página
+// Numero de páginas
+const pagesNumber = computed(() => {
+  return Math.ceil(props.totalItems / pagination.value.rowsPerPage)
+})
+
+// Função para busca de dados
+const callFetchData = async () => {
+  await props.fetchData(pagination.value, filter.value)
+  pagination.value.rowsNumber = props.totalItems
+}
+
+// Função para ordenação
+const onRequest = (requestProps) => {
+  const { page, rowsPerPage, sortBy, descending } = requestProps.pagination
+
+  pagination.value.page = page
+  pagination.value.rowsPerPage = rowsPerPage
+  pagination.value.sortBy = sortBy
+  pagination.value.descending = descending
+
+  callFetchData()
+}
+
+// Função para quando o usuário digitar
+const onFilterChange = () => {
   pagination.value.page = 1
-  requestData({ pagination: pagination.value }, newFilter)
-}, 500)
+  callFetchData()
+}
 
 // Ações
 const showModal = ref(false)
