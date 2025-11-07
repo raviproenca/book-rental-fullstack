@@ -39,7 +39,7 @@
         @request="onRequest"
         :loading="props.loading"
         hide-pagination
-        binary-state-sort="true"
+        :binary-state-sort="true"
       >
         <template v-slot:item="props">
           <div class="q-pa-xs col-xs-12 col-sm-6">
@@ -361,7 +361,7 @@
 </style>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import ModalComponent from './ModalComponent.vue'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
@@ -490,5 +490,9 @@ function formatDateToBR(dateString) {
 
 const visibleColumns = computed(() => {
   return props.columns.filter((col) => col.name !== 'password')
+})
+
+onMounted(() => {
+  callFetchData()
 })
 </script>
