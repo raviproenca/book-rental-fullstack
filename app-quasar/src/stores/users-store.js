@@ -46,12 +46,11 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  const registerUser = async (userData, paginationData, searchFilter) => {
+  const registerUser = async (userData) => {
     loading.value = true
     error.value = null
     try {
       await api.post('/user', userData)
-      await fetchUsers(paginationData, searchFilter)
     } catch (err) {
       error.value = err.response ? err.response.data.message : 'Erro ao buscar usuários.'
       throw err
@@ -60,12 +59,11 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  const editUser = async (userId, userData, paginationData, searchFilter) => {
+  const editUser = async (userId, userData) => {
     loading.value = true
     error.value = null
     try {
       await api.put(`/user/${userId}`, userData)
-      await fetchUsers(paginationData, searchFilter)
     } catch (err) {
       error.value = err.response ? err.response.data.message : 'Erro ao buscar usuários.'
       throw err
@@ -74,12 +72,11 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  const deleteUser = async (userId, paginationData, searchFilter) => {
+  const deleteUser = async (userId) => {
     loading.value = true
     error.value = null
     try {
       await api.delete(`/user/${userId}`)
-      await fetchUsers(paginationData, searchFilter)
     } catch (err) {
       error.value = err.response ? err.response.data.message : 'Erro ao buscar usuários.'
       throw err

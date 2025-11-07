@@ -30,12 +30,14 @@
       <q-table
         class="col border-radius"
         table-header-class="table-header"
-        :rows="filteredRows"
+        :rows="props.rows"
         :columns="visibleColumns"
         row-key="id"
         :grid="$q.screen.lt.md"
         :rows-per-page-options="[5, 10, 20]"
         v-model:pagination="pagination"
+        @request="onRequest"
+        :loading="props.loading"
         hide-pagination
         binary-state-sort="true"
       >
@@ -329,6 +331,7 @@
               :max-pages="6"
               boundary-numbers
               size="md"
+              @update:model-value="callFetchData"
             />
           </div>
         </template>
@@ -341,9 +344,9 @@
             :mode="modalMode"
             :area="areaType"
             :columns="columns"
-            :existingItems="rows"
+            :existingItems="props.rows"
             @close-modal="closeModal"
-            @saved="onSaved"
+            @saved="callFetchData"
           />
         </q-dialog>
       </template>
@@ -358,7 +361,7 @@
 </style>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import ModalComponent from './ModalComponent.vue'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'

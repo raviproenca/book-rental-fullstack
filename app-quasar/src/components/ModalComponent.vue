@@ -232,7 +232,8 @@ import { useRentsStore } from 'src/stores/rents-store'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
 
-const emit = defineEmits(['close-modal'])
+const emit = defineEmits(['close-modal', 'dataChanged'])
+
 const { t } = useI18n()
 const $q = useQuasar()
 
@@ -426,6 +427,7 @@ const save = async () => {
   else if (props.area === 'rents') await store.registerRent(payload)
   else console.log('ERRO!!')
 
+  emit('dataChanged')
   emit('close-modal')
 }
 
@@ -465,6 +467,7 @@ const edit = async () => {
   else if (props.area === 'rents') await store.editRent(props.row.id, payload)
   else console.log('ERRO!!')
 
+  emit('dataChanged')
   emit('close-modal')
 }
 
@@ -485,6 +488,7 @@ const remove = async () => {
       return
     }
 
+    emit('dataChanged')
     emit('close-modal')
     $q.notify({
       type: 'positive',
@@ -507,6 +511,7 @@ const confirm = async () => {
   if (props.area === 'rents') await store.confirmRent(props.row.id)
   else console.log('ERRO!!')
 
+  emit('dataChanged')
   emit('close-modal')
 }
 
