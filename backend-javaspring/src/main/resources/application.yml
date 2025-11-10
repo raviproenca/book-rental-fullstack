@@ -2,8 +2,10 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/locadoradb
     username: postgres
-    password: 12345678
     driver-class-name: org.postgresql.Driver
+
+  profiles:
+    active: local
 
   jpa:
     hibernate:
@@ -12,11 +14,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-application:
-  security:
-    jwt:
-      secret-key: REMOVED
 
 server:
   port: 8080
