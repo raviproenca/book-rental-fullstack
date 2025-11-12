@@ -1,0 +1,65 @@
+services:
+  # 1. SERVIÇO: BANCO DE DADOS (PostgreSQL)
+  db:
+    image: postgres:15-alpine # Imagem oficial e leve do Postgres
+    container_name: locadora-db
+    environment:
+      # Define o usuário, senha e banco que serão criados
+      # O backend VAI USAR essas mesmas variáveis
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: locadoradb
+    ports:
+      # Expõe a porta do banco SÓ para o seu computador (localhost)
+      # Permite que você acesse com o DBeaver/PgAdmin em "localhost:5432"
+      - "5432:5432"
+    volumes:
+      # Garante que os dados do banco não se percam
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      # --- ISSO É O QUE TORNA O ARQUIVO ROBUSTO ---
+      # Testa se o banco está pronto antes de liberar outros serviços
+      test: ["CMD-SHELL", "pg_isready -U postgres -d locadoradb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. SERVIÇO: BACKEND (Spring Boot)
+  backend:
+    container_name: locadora-backend
+    build:
+      # Diz ao Compose para construir a imagem usando o Dockerfile
+      # que está na pasta ./backend-javaspring
+      context: ./backend-javaspring
+    environment:
+      # Sobrescreve o application.yml
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/locadoradb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 12345678
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+    depends_on:
+      db:
+        # Só inicia o backend DEPOIS que o healthcheck do 'db' passar
+        condition: service_healthy
+    # REPARE: Não há seção "ports:"!
+    # O backend fica 100% protegido e só o Nginx (frontend) pode acessá-lo.
+
+  # 3. SERVIÇO: FRONTEND (Quasar + Nginx)
+  frontend:
+    container_name: locadora-frontend
+    build:
+      # Constrói a imagem usando o Dockerfile (multi-stage)
+      # que está na pasta ./frontend-quasar
+      context: ./app-quasar
+    ports:
+      # --- ESTA É A ÚNICA PORTA DE ENTRADA ---
+      # Expõe a porta 80 do Nginx (de dentro) para a 9090 (do seu PC)
+      - "9090:80"
+    depends_on:
+      # Garante que o frontend suba por último
+      - backend
+
+# Define o "volume" (HD virtual) que o 'db' usa para guardar os dados
+volumes:
+  db-data:
+    driver: local

@@ -25,7 +25,7 @@ public class RentsController {
 
     @GetMapping
     public ResponseEntity<Page<RentResponseDTO>> getAllRents(
-            @PageableDefault(size = 10, page = 0, sort = {"name"}) Pageable pageable,
+            @PageableDefault(size = 10, page = 0, sort = {"rentDate"}) Pageable pageable,
             @RequestParam(required = false) String search
     ) {
         Page<RentResponseDTO> rents = rentService.getRentsService(pageable, search);

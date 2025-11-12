@@ -38,6 +38,10 @@ export default defineConfig((/* ctx */) => {
         node: 'node20',
       },
 
+      env: {
+        VITE_API_BASE_URL: '/api',
+      },
+
       vueRouterMode: 'hash', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
@@ -75,6 +79,15 @@ export default defineConfig((/* ctx */) => {
     devServer: {
       // https: true,
       open: true, // opens browser window automatically
+      proxy: {
+        // Redireciona qualquer chamada que comece com /api
+        '/api': {
+          target: 'http://localhost:8080',
+          changeOrigin: true,
+          // Reescreve a URL: remove o '/api' do começo
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
