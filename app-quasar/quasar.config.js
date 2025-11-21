@@ -1,6 +1,5 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file
-
 import { defineConfig } from '#q-app/wrappers'
 
 export default defineConfig((/* ctx */) => {
@@ -36,6 +35,12 @@ export default defineConfig((/* ctx */) => {
       target: {
         browser: ['es2022', 'firefox115', 'chrome115', 'safari14'],
         node: 'node20',
+      },
+
+      rawDefine: {
+        __VUE_I18N_FULL_INSTALL__: true,
+        __VUE_I18N_LEGACY_API__: false, // legacy: false
+        __INTLIFY_PROD_DEVTOOLS__: false,
       },
 
       env: {

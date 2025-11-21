@@ -1,6 +1,6 @@
-import enUS from './enUS'
-import esES from './esES'
-import ptBR from './ptBR'
+import enUS from './en-us'
+import esES from './es-es'
+import ptBR from './pt-br'
 
 export default {
   'en-US': enUS,

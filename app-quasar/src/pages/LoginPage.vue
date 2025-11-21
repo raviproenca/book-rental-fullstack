@@ -92,9 +92,7 @@ const quasarInstance = useQuasar()
 const authStore = useAuthStore()
 const router = useRouter()
 
-const { t } = useI18n()
-
-const { locale } = useI18n({ useScope: 'global' })
+const { t, locale } = useI18n({ useScope: 'global' })
 
 function changeLang(lang) {
   locale.value = lang
