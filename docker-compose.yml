@@ -1,7 +1,7 @@
 services:
   # 1. Banco de dados (PostgreSQL)
   db:
-    image: postgres:15-alpine 
+    image: postgres:15-alpine
     container_name: locadora-db
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -16,7 +16,7 @@ services:
       - db-data:/var/lib/postgresql/data
     healthcheck:
       # Testa se o banco está pronto antes de liberar outros serviços
-      test: ["CMD-SHELL", "pg_isready -U postgres -d locadoradb"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d locadoradb" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -39,7 +39,7 @@ services:
         condition: service_healthy
     # Não há seção "ports", só o Nginx (frontend) pode acessá-lo.
 
-  # 3. Frontend (Quasar + Nginx)
+    # 3. Frontend (Quasar + Nginx)
   frontend:
     container_name: locadora-frontend
     build:

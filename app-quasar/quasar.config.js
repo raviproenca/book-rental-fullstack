@@ -10,7 +10,7 @@ export default defineConfig((/* ctx */) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['i18n'],
+    boot: ['i18n', 'api'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
     css: ['app.scss'],
@@ -44,7 +44,7 @@ export default defineConfig((/* ctx */) => {
       },
 
       env: {
-        VITE_API_BASE_URL: '/api',
+        VITE_API_BASE_URL: 'https://locadora-backend-v1-0.onrender.com',
       },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'

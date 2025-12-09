@@ -11,10 +11,12 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
 
-                .allowedOrigins("http://localhost:9000", "http://127.0.0.1:9000", "http://localhost:9090")
+                .allowedOrigins("http://localhost:9000", "http://127.0.0.1:9000", "http://localhost:9090", "https://locadora-frontend.onrender.com")
 
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
 
-                .allowedHeaders("*");
+                .allowedHeaders("*")
+
+                .allowCredentials(true);
     }
 }
