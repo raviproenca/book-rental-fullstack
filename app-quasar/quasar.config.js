@@ -44,7 +44,7 @@ export default defineConfig((/* ctx */) => {
       },
 
       env: {
-        VITE_API_BASE_URL: 'https://locadora-backend-v1-0.onrender.com',
+        VITE_API_BASE_URL: 'https://evening-increase-intersection-views.trycloudflare.com/',
       },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'

@@ -1,5 +1,4 @@
 services:
-  # 1. Banco de dados (PostgreSQL)
   db:
     image: postgres:15-alpine
     container_name: locadora-db
@@ -7,52 +6,49 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: locadoradb
-    ports:
-      # Expõe a porta do banco só pro localhost
-      # Permite o acesso do PgAdmin em "localhost:5432"
-      - "5432:5432"
-    volumes:
-      # Garante que os dados do banco não se percam
-      - db-data:/var/lib/postgresql/data
     healthcheck:
-      # Testa se o banco está pronto antes de liberar outros serviços
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d locadoradb" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d locadoradb"]
       interval: 10s
-      timeout: 5s
       retries: 5
 
-  # 2. Backend (Spring Boot)
   backend:
+    build: ./backend-javaspring
     container_name: locadora-backend
-    build:
-      # Constroi a imagem usando o Dockerfile que está na pasta ./backend-javaspring
-      context: ./backend-javaspring
     environment:
-      # Sobrescreve o application.yml
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/locadoradb
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: 12345678
-      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/locadoradb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=12345678
+      - SPRING_PROFILES_ACTIVE=prod
+      - APPLICATION_SECURITY_JWT_SECRET_KEY=${JWT_SECRET}=
+      - SERVER_SERVLET_CONTEXT_PATH=/api
     depends_on:
       db:
-        # Só inicia o backend DEPOIS que o healthcheck do 'db' passar
         condition: service_healthy
-    # Não há seção "ports", só o Nginx (frontend) pode acessá-lo.
 
-    # 3. Frontend (Quasar + Nginx)
   frontend:
+    build: ./app-quasar
     container_name: locadora-frontend
-    build:
-      # Constrói a imagem usando o Dockerfile que está na pasta ./frontend-quasar
-      context: ./app-quasar
-    ports:
-      # --- ESTA É A ÚNICA PORTA DE ENTRADA ---
-      # Expõe a porta 80 do Nginx (de dentro) para a 9090 (do seu PC)
-      - "9090:80"
-    depends_on:
-      # Garante que o frontend suba por último
-      - backend
 
-volumes:
-  db-data:
-    driver: local
+  gateway:
+    image: nginx:alpine
+    container_name: locadora-gateway
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8000:80"
+    depends_on:
+      - backend
+      - frontend
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: locadora-ngrok
+    restart: always
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_TOKEN}
+    command:
+      - "http"
+      - "locadora-gateway:80"
+    depends_on:
+      - gateway

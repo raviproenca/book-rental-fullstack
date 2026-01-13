@@ -1,28 +1,31 @@
-# --- 1: Build ---
+# --- Estágio 1: Build ---
 FROM node:lts-alpine AS build-stage
 WORKDIR /app
 
-# 1. Copia os arquivos de gerenciamento de pacotes
-COPY package.json package-lock.json ./
+# Instala o Quasar CLI globalmente para garantir que o comando 'build' funcione
+RUN npm install -g @quasar/cli
 
-# 2. Instala as dependências 
+COPY package*.json ./
 RUN npm ci --ignore-scripts
 
-# 3. Copia o resto do código-fonte
 COPY . .
-
-# 4. Roda o build.
+# Executa o build (ajuste se seu comando for diferente, ex: 'quasar build')
 RUN npm run build
 
-# --- 2: Nginx ---
+# --- Estágio 2: Produção com Nginx ---
 FROM nginx:stable-alpine AS production-stage
+
+# Remove a config padrão
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Copia o nginx.conf (que foi copiado no passo 3)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copia a configuração específica que criamos no Passo 1
+# Certifique-se de que o nome do arquivo aqui seja o mesmo que você criou
+COPY nginx-frontend.conf /etc/nginx/conf.d/default.conf
 
-# Copia os arquivos da pasta dist/spa (criada no Passo 4)
+# Copia os arquivos gerados no build
 COPY --from=build-stage /app/dist/spa /usr/share/nginx/html
 
 EXPOSE 80
+
+# Inicia o Nginx (daemon off é necessário para o container não fechar)
 CMD ["nginx", "-g", "daemon off;"]
