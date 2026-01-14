@@ -45,9 +45,9 @@ public class RentService {
                 entity.getId(),
                 entity.getRenterEntity(),
                 entity.getBookEntity(),
-                entity.getRentDate(),
-                entity.getDevolutionDate(),
                 entity.getDeadLine(),
+                entity.getDevolutionDate(),
+                entity.getRentDate(),
                 entity.getStatus().name()
         ));
     }

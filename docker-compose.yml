@@ -5,9 +5,11 @@ services:
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: locadoradb
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d locadoradb"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       retries: 5
 
@@ -16,11 +18,10 @@ services:
     container_name: locadora-backend
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/locadoradb
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=12345678
-      - SPRING_PROFILES_ACTIVE=prod
-      - APPLICATION_SECURITY_JWT_SECRET_KEY=${JWT_SECRET}=
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - APPLICATION_SECURITY_JWT_SECRET_KEY=${JWT_SECRET}
       - SERVER_SERVLET_CONTEXT_PATH=/api
     depends_on:
       db:
@@ -52,3 +53,6 @@ services:
       - "locadora-gateway:80"
     depends_on:
       - gateway
+
+volumes:
+  postgres_data:
