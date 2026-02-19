@@ -1,15 +1,8 @@
 <template>
   <q-page class="column items-center justify-center q-pa-md background-color">
     <div class="column items-center" style="width: 100%; max-width: 500px">
-      <div class="row justify-between items-center full-width q-pl-md q-pr-md">
+      <div class="row justify-start items-center full-width q-pl-md q-pr-md">
         <h1 class="text-h4 text-white text-weight-bolder text-with-shadow">LOGIN</h1>
-        <q-btn
-          flat
-          dense
-          no-caps
-          :label="t('pages.login.forgotPassword')"
-          class="text-white text-weight-bolder text-with-shadow text-subtitle1"
-        />
       </div>
 
       <q-card class="full-width shadow-4" style="border-radius: 30px">
@@ -106,7 +99,7 @@ const handleLogin = async () => {
       password: password.value,
     })
 
-    router.push('/app/usuarios')
+    router.push('/app/dashboard')
   } catch (error) {
     quasarInstance.notify({
       color: 'negative',

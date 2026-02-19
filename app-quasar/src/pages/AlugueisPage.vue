@@ -26,7 +26,7 @@ const { t } = useI18n()
 const rentsth = computed(() => [
   {
     name: 'book',
-    label: t('common.book'),
+    label: t('common.bookEntity'),
     field: 'book',
     format: (val) => val?.name ?? '-',
     align: 'center',
@@ -35,7 +35,7 @@ const rentsth = computed(() => [
   },
   {
     name: 'renter',
-    label: t('common.renter'),
+    label: t('common.renterEntity'),
     field: 'renter',
     format: (val) => val?.name ?? '-',
     align: 'center',
@@ -66,7 +66,7 @@ const rentsth = computed(() => [
   },
   {
     name: 'status',
-    label: 'Status',
+    label: t('pages.rents.status'),
     field: 'status',
     align: 'center',
     form: false,
@@ -74,6 +74,7 @@ const rentsth = computed(() => [
   },
   { name: 'actions', label: t('common.actions'), align: 'center' },
 ])
+
 
 const rentStore = useRentsStore()
 const { rents, totalItems, loading } = storeToRefs(rentStore)

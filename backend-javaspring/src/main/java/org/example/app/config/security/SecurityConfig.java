@@ -29,10 +29,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults()) // Isso usa o bean corsConfigurationSource abaixo
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.POST).hasAuthority("ADMIN")
+                        .requestMatchers(org.springframework.http.HttpMethod.PUT).hasAuthority("ADMIN")
+                        .requestMatchers(org.springframework.http.HttpMethod.DELETE).hasAuthority("ADMIN")
+                        .requestMatchers(org.springframework.http.HttpMethod.PATCH).hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -42,12 +46,9 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // REMOVEMOS o Bean corsFilter para evitar o erro de conflito de tipos
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Permite tudo para o ambiente de desenvolvimento/túnel
         configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Origin", "Accept"));

@@ -5,6 +5,6 @@ import org.example.app.models.entities.RenterEntity;
 
 import java.time.LocalDate;
 
-public record RentResponseDTO(Long id, RenterEntity renter, BookEntity book, LocalDate deadLine, LocalDate devolutionDate, LocalDate rentDate, String status ) {
+public record RentResponseDTO(Long id, RenterEntity renter, BookEntity book, LocalDate deadLine, String devolutionDate, LocalDate rentDate, String status ) {
 
 }

@@ -3,6 +3,7 @@ package org.example.app.repositories;
 import org.example.app.models.entities.BookEntity;
 import org.example.app.models.entities.RentEntity;
 import org.example.app.models.entities.UserEntity;
+import org.example.app.models.enums.RentStatus;
 import org.example.app.models.responses.MonthlyCountDTO;
 import org.example.app.models.responses.RenterRentCountDTO;
 import org.springframework.data.domain.Page;
@@ -57,6 +58,8 @@ public interface RentRepository extends JpaRepository<RentEntity, Long>, JpaSpec
 
     @Query("SELECT COUNT(r) FROM RentEntity r WHERE r.rentDate >= :startDate")
     Long findAllRentsQuantity(@Param("startDate") LocalDate startDate);
+
+    List<RentEntity> findByStatusAndDeadLineBefore(RentStatus status, LocalDate date);
 
     boolean existsByRenterEntity_Id(Long renterId);
     boolean existsByBookEntity_Id(Long bookId);

@@ -49,19 +49,16 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { useUsersStore } from 'src/stores/users-store'
+import { useAuthStore } from 'src/stores/auth-store'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
-const userString = localStorage.getItem('user')
-const loginUser = ref(userString ? JSON.parse(userString) : null)
-
-const usersStore = useUsersStore()
-const { users } = storeToRefs(usersStore)
+const authStore = useAuthStore()
+const { user } = storeToRefs(authStore)
 
 const userData = computed(() => {
-  return users.value.find((user) => user.email === loginUser.value.email)
+  return user.value || {}
 })
 
 const { locale } = useI18n({ useScope: 'global' })
@@ -77,9 +74,8 @@ function logout() {
   isLoggingOut.value = true
 
   setTimeout(() => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    router.push('/login')
+    authStore.logout()
+    router.replace('/login')
   }, 700)
 }
 </script>

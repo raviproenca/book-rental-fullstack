@@ -24,8 +24,8 @@ export default {
     totalInUse: 'Alquilados',
     address: 'Dirección',
     cpf: 'CPF',
-    book: 'Libro',
-    renter: 'Arrendatario',
+    bookEntity: 'Libro',
+    renterEntity: 'Arrendatario',
     rentDate: 'Fecha de Alquiler',
     deadLine: 'Fecha de Entrega',
     devolutionDate: 'Fecha de Devolución',
@@ -76,6 +76,7 @@ export default {
     rents: {
       searchPlaceholder: 'Buscar alquileres',
       title: 'Alquileres',
+      status: 'Estado',
     },
     login: {
       forgotPassword: 'Olvidé mi contraseña',
@@ -130,8 +131,9 @@ export default {
     date: {
       invalidFormat: 'El formato de la fecha debe ser DD-MM-AAAA.',
       invalid: 'Fecha inválida.',
-      pastDeadline: 'La fecha de devolución no puede ser en el pasado.',
       futureLaunch: 'La fecha de lanzamiento no puede ser en el futuro.',
+      deadLineBeforeRentDate: 'La fecha de entrega no puede ser anterior a la fecha de alquiler.',
+      devolutionDateBeforeRentDate: 'La fecha de devolución no puede ser anterior a la fecha de alquiler.',
     },
   },
 }

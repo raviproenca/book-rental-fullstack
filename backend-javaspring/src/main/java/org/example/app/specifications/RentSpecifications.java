@@ -14,10 +14,10 @@ public class RentSpecifications {
 
         String searchPattern = "%" + search.toLowerCase() + "%";
 
-        return Specification.<RentEntity>where(
-                ((root, query, cb) -> cb.like(cb.lower(root.get("book").get("name")), searchPattern))
+        Specification<RentEntity> spec = Specification.<RentEntity>where(
+                ((root, query, cb) -> cb.like(cb.lower(root.get("bookEntity").get("name")), searchPattern))
         ).or(
-                (root, query, cb) -> cb.like(cb.lower(root.get("renter").get("name")), searchPattern)
+                (root, query, cb) -> cb.like(cb.lower(root.get("renterEntity").get("name")), searchPattern)
         ).or(
                 (root, query, cb) -> {
                     String format = "DD/MM/YYYY";
@@ -54,5 +54,11 @@ public class RentSpecifications {
         ).or(
                 (root, query, cb) -> cb.like(cb.lower(root.get("status").as(String.class)), searchPattern)
         );
+
+        if ("não entregue".contains(search.toLowerCase())) {
+            spec = spec.or((root, query, cb) -> cb.isNull(root.get("devolutionDate")));
+        }
+
+        return spec;
     }
 }

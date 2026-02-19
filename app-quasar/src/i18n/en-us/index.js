@@ -24,8 +24,8 @@ export default {
     totalInUse: 'Rented',
     address: 'Address',
     cpf: 'CPF',
-    book: 'Book',
-    renter: 'Renter',
+    bookEntity: 'Book',
+    renterEntity: 'Renter',
     rentDate: 'Rent Date',
     deadLine: 'Deadline',
     devolutionDate: 'Devolution Date',
@@ -76,6 +76,7 @@ export default {
     rents: {
       searchPlaceholder: 'Search rents',
       title: 'Rents',
+      status: 'Status',
     },
     login: {
       forgotPassword: 'I forgot my password',
@@ -128,10 +129,11 @@ export default {
       min: 'The stock must be a positive number',
     },
     date: {
-      invalidFormat: 'The date format must be DD-MM-AAAA.',
+      invalidFormat: 'The date format must be MM-DD-AAAA.',
       invalid: 'Invalid date.',
-      pastDeadline: 'The devolution date cannot be in the past.',
       futureLaunch: 'The launch date cannot be in the future.',
+      deadLineBeforeRentDate: 'The deadline cannot be before the rent date.',
+      devolutionDateBeforeRentDate: 'The devolution date cannot be before the rent date.',
     },
   },
 }

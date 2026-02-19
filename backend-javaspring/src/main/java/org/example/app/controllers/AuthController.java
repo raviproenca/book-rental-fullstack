@@ -22,7 +22,18 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> loginController(@Valid @RequestBody AuthRequestDTO request) {
         AuthResponseDTO newAuth = service.loginService(request);
-        return ResponseEntity.ok(newAuth);
+
+        org.springframework.http.ResponseCookie cookie = org.springframework.http.ResponseCookie.from("token", newAuth.token())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(24 * 60 * 60)
+                .sameSite("None")
+                .build();
+
+        return ResponseEntity.ok()
+                .header(org.springframework.http.HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(newAuth);
     }
 
 }

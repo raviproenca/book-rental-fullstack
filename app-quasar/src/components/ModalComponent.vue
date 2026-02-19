@@ -101,9 +101,10 @@
               mask="##-##-####"
               :rules="getRulesFor(column)"
               lazy-rules
+              readonly
             >
               <template v-slot:append>
-                <q-icon name="event" class="cursor-pointer">
+                <q-icon name="event" class="cursor-pointer calendar-icon-btn">
                   <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                     <q-date mask="DD-MM-YYYY" v-model="formattedDates[column.name]">
                       <div class="row items-center justify-end">
@@ -124,6 +125,32 @@
               :rules="getRulesFor(column)"
               lazy-rules
               debounce="500"
+              dense
+              rounded
+            />
+            <q-input
+              v-else-if="column.name === 'cpf'"
+              dark
+              color="amber-1"
+              v-model="localRow[column.field]"
+              mask="###.###.###-##"
+              unmasked-value
+              :placeholder="`${t('common.enter')} ${column.label.toLowerCase()}`"
+              :rules="getRulesFor(column)"
+              lazy-rules
+              dense
+              rounded
+            />
+            <q-input
+              v-else-if="column.name === 'telephone'"
+              dark
+              color="amber-1"
+              v-model="localRow[column.field]"
+              mask="(##) # ####-####"
+              unmasked-value
+              :placeholder="`${t('common.enter')} ${column.label.toLowerCase()}`"
+              :rules="getRulesFor(column)"
+              lazy-rules
               dense
               rounded
             />
@@ -255,60 +282,84 @@ const roleOptions = [
 
 const publishersStore = usePublishersStore()
 const { publishers } = storeToRefs(publishersStore)
+const { fetchPublishers } = publishersStore
 
 const booksStore = useBooksStore()
 const { books } = storeToRefs(booksStore)
+const { fetchBooks } = booksStore
 
 const rentersStore = useRentersStore()
 const { renters } = storeToRefs(rentersStore)
+const { fetchRenters } = rentersStore
 
 const allowedBooks = computed(() => {
   return books.value.filter((book) => book.totalQuantity > 0)
 })
 
-onMounted(() => {
-  if (props.area === 'books') {
-    if (publishers.value.length === 0) {
-      publishersStore.fetchPublishers()
+onMounted(async () => {
+  if (props.area === 'rents') {
+    const pagination = {
+      page: 1,
+      rowsPerPage: 1000,
+      sortBy: 'name',
+      descending: false,
     }
+    await fetchRenters(pagination)
+    await fetchBooks(pagination)
   }
 
-  if (props.area === 'rents') {
-    if (books.value.length === 0) {
-      booksStore.fetchBooks()
+  if (props.area === 'books') {
+    const pagination = {
+      page: 1,
+      rowsPerPage: 1000,
+      sortBy: 'name',
+      descending: false,
     }
-    if (renters.value.length === 0) {
-      rentersStore.fetchRenters()
-    }
+    await fetchPublishers(pagination)
   }
 })
 
 watch(
   () => props.row,
   (r) => {
-    localRow.value = r
-      ? { ...r }
-      : {
-          name: '',
-          email: '',
-          password: '',
-          role: null,
-          telephone: '',
-          site: '',
-          author: '',
-          publisher: null,
-          launchDate: null,
-          totalQuantity: 0,
-          totalInUse: 0,
-          address: '',
-          cpf: '',
-          book: null,
-          renter: null,
-          rentDate: null,
-          deadLine: null,
-          devolutionDate: null,
-          status: '',
+    if (r) {
+      localRow.value = { ...r }
+      if (props.area === 'rents') {
+        if (localRow.value.book && typeof localRow.value.book === 'object') {
+          localRow.value.book = localRow.value.book.id
         }
+        if (localRow.value.renter && typeof localRow.value.renter === 'object') {
+          localRow.value.renter = localRow.value.renter.id
+        }
+      }
+      if (props.area === 'books') {
+        if (localRow.value.publisher && typeof localRow.value.publisher === 'object') {
+          localRow.value.publisher = localRow.value.publisher.id
+        }
+      }
+    } else {
+      localRow.value = {
+        name: '',
+        email: '',
+        password: '',
+        role: null,
+        telephone: '',
+        site: '',
+        author: '',
+        publisher: null,
+        launchDate: null,
+        totalQuantity: 0,
+        totalInUse: 0,
+        address: '',
+        cpf: '',
+        book: null,
+        renter: null,
+        rentDate: null,
+        deadLine: null,
+        devolutionDate: null,
+        status: '',
+      }
+    }
   },
   { immediate: true, deep: true },
 )
@@ -348,7 +399,7 @@ dateFields.forEach((field) => {
   formattedDates[field] = computed({
     get() {
       const dateValue = localRow.value[field]
-      if (!dateValue) return ''
+      if (!dateValue || dateValue === 'Não Entregue') return ''
 
       const datePart = dateValue.split('T')[0]
       const [year, month, day] = datePart.split('-')
@@ -413,6 +464,9 @@ const save = async () => {
       if (column.field === 'renter' && typeof value === 'object' && value !== null) {
         value = value.id
       }
+      if (column.field === 'devolutionDate' && value === 'Não Entregue') {
+        value = null
+      }
 
       payload[key] = value
     }
@@ -464,6 +518,9 @@ const edit = async () => {
       }
       if (column.field === 'renter' && typeof value === 'object' && value !== null) {
         value = value.id
+      }
+      if (column.field === 'devolutionDate' && value === 'Não Entregue') {
+        value = null
       }
 
       payload[key] = value
@@ -652,6 +709,23 @@ const deadLineRules = computed(() => [
     today.setHours(0, 0, 0, 0)
 
     if (selectedDate < today) {
+      if (props.mode === 'edit') {
+        // Validation: Deadline cannot be before Rent Date
+        if (localRow.value.rentDate) {
+          const rentDateParts = localRow.value.rentDate.split('-')
+          // rentDate format from backend is typically YYYY-MM-DD
+          const rYear = parseInt(rentDateParts[0], 10)
+          const rMonth = parseInt(rentDateParts[1], 10) - 1
+          const rDay = parseInt(rentDateParts[2], 10)
+          const rentDate = new Date(rYear, rMonth, rDay)
+          rentDate.setHours(0, 0, 0, 0)
+
+          if (selectedDate < rentDate) {
+            return t('rules.date.deadLineBeforeRentDate')
+          }
+        }
+        return true
+      }
       return t('rules.date.pastDeadline')
     }
 
@@ -705,6 +779,22 @@ const devolutionDateRules = computed(() => {
       today.setHours(0, 0, 0, 0)
 
       if (selectedDate < today) {
+        if (props.mode === 'edit') {
+          // Validation: Devolution Date cannot be before Rent Date
+          if (localRow.value.rentDate) {
+            const rentDateParts = localRow.value.rentDate.split('-')
+            const rYear = parseInt(rentDateParts[0], 10)
+            const rMonth = parseInt(rentDateParts[1], 10) - 1
+            const rDay = parseInt(rentDateParts[2], 10)
+            const rentDate = new Date(rYear, rMonth, rDay)
+            rentDate.setHours(0, 0, 0, 0)
+
+            if (selectedDate < rentDate) {
+              return t('rules.date.devolutionDateBeforeRentDate')
+            }
+          }
+          return true
+        }
         return t('rules.date.pastDeadline')
       }
 
@@ -758,3 +848,17 @@ const handleSubmit = async () => {
   }
 }
 </script>
+
+<style scoped>
+.calendar-icon-btn {
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.calendar-icon-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+</style>

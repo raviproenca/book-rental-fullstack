@@ -21,9 +21,7 @@ public class RentUpdateDTO {
     private Long bookId;
 
     @NotNull(message = "O prazo de devolução é obrigatório.")
-    @FutureOrPresent(message = "O prazo de devolução não pode estar no passado.")
     private LocalDate deadLine;
 
-    @FutureOrPresent(message = "A data de devolução não pode estar no passado.")
     private LocalDate devolutionDate;
 }

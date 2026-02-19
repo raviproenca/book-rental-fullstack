@@ -2,6 +2,8 @@ services:
   db:
     image: postgres:15-alpine
     container_name: locadora-db
+    ports:
+      - "5433:5432"
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -56,3 +58,5 @@ services:
 
 volumes:
   postgres_data:
+    external: true
+    name: raviproencagithubio_db-data

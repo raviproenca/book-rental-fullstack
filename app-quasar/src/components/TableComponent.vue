@@ -24,7 +24,7 @@
             <q-icon name="search" />
           </template>
         </q-input>
-        <q-btn round size="md" color="teal-10" icon="add" @click="openCreateModal()"></q-btn>
+        <q-btn v-if="authStore.isAdmin()" round size="md" color="teal-10" icon="add" @click="openCreateModal()"></q-btn>
       </div>
 
       <q-table
@@ -39,8 +39,8 @@
         @request="onRequest"
         :loading="props.loading"
         hide-pagination
-        :binary-state-sort="true"
       >
+
         <template v-slot:item="props">
           <div class="q-pa-xs col-xs-12 col-sm-6">
             <q-card class="q-mb-md shadow-4 border-radius">
@@ -110,7 +110,7 @@
                     <q-item-section>
                       <q-item-label caption>{{ t('common.launchDate') }}</q-item-label>
 
-                      <q-item-label>{{ formatDateToBR(props.row.launchDate) }}</q-item-label>
+                      <q-item-label>{{ formatDate(props.row.launchDate) }}</q-item-label>
                     </q-item-section>
                   </q-item>
 
@@ -148,7 +148,7 @@
 
                   <q-item v-if="props.row.book">
                     <q-item-section>
-                      <q-item-label caption>{{ t('common.book') }}</q-item-label>
+                      <q-item-label caption>{{ t('common.bookEntity') }}</q-item-label>
 
                       <q-item-label>{{ props.row.book.name }}</q-item-label>
                     </q-item-section>
@@ -166,7 +166,7 @@
                     <q-item-section>
                       <q-item-label caption>{{ t('common.rentDate') }}</q-item-label>
 
-                      <q-item-label>{{ formatDateToBR(props.row.rentDate) }}</q-item-label>
+                      <q-item-label>{{ formatDate(props.row.rentDate) }}</q-item-label>
                     </q-item-section>
                   </q-item>
 
@@ -174,7 +174,7 @@
                     <q-item-section>
                       <q-item-label caption>{{ t('common.deadLine') }}</q-item-label>
 
-                      <q-item-label>{{ formatDateToBR(props.row.deadLine) }}</q-item-label>
+                      <q-item-label>{{ formatDate(props.row.deadLine) }}</q-item-label>
                     </q-item-section>
                   </q-item>
 
@@ -183,7 +183,7 @@
                       <q-item-label caption>{{ t('common.devolutionDate') }}</q-item-label>
 
                       <q-item-label>{{
-                        formatDateToBR(props.row.devolutionDate) || t('common.notDelivered')
+                        formatDate(props.row.devolutionDate) || t('common.notDelivered')
                       }}</q-item-label>
                     </q-item-section>
                   </q-item>
@@ -192,7 +192,11 @@
                     <q-item-section>
                       <q-item-label caption>Status</q-item-label>
 
-                      <q-item-label>{{ translateStatus(props.row.status) }}</q-item-label>
+                      <q-item-label>{{
+                        props.row.status
+                          ? t('common.status.' + props.row.status.toLowerCase())
+                          : ''
+                      }}</q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -200,7 +204,7 @@
 
               <q-separator />
 
-              <q-card-actions align="center">
+              <q-card-actions align="center" v-if="authStore.isAdmin()">
                 <q-btn
                   flat
                   round
@@ -235,7 +239,7 @@
           </div>
         </template>
 
-        <template v-slot:body-cell-actions="props">
+        <template v-slot:body-cell-actions="props" v-if="authStore.isAdmin()">
           <q-td :props="props">
             <q-btn flat round dense icon="o_edit" color="green" @click="openEditModal(props.row)" />
             <q-btn
@@ -288,31 +292,35 @@
 
         <template v-slot:body-cell-launchDate="props">
           <q-td :props="props">
-            {{ formatDateToBR(props.row.launchDate) }}
+            {{ formatDate(props.row.launchDate) }}
           </q-td>
         </template>
 
         <template v-slot:body-cell-rentDate="props">
           <q-td :props="props">
-            {{ formatDateToBR(props.row.rentDate) }}
+            {{ formatDate(props.row.rentDate) }}
           </q-td>
         </template>
 
         <template v-slot:body-cell-deadLine="props">
           <q-td :props="props">
-            {{ formatDateToBR(props.row.deadLine) || 'N/A' }}
+            {{ formatDate(props.row.deadLine) || 'N/A' }}
           </q-td>
         </template>
 
         <template v-slot:body-cell-devolutionDate="props">
           <q-td :props="props">
-            {{ formatDateToBR(props.row.devolutionDate) || t('common.notDelivered') }}
+            {{ formatDate(props.row.devolutionDate) || t('common.notDelivered') }}
           </q-td>
         </template>
 
         <template v-slot:body-cell-status="props">
           <q-td :props="props">
-            {{ translateStatus(props.row.status) }}
+            {{
+              props.row.status
+                ? t('common.status.' + props.row.status.toLowerCase())
+                : ''
+            }}
           </q-td>
         </template>
 
@@ -363,10 +371,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import ModalComponent from './ModalComponent.vue'
+import { useAuthStore } from 'src/stores/auth-store'
 import { useI18n } from 'vue-i18n'
+
+const authStore = useAuthStore()
 import { useQuasar } from 'quasar'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const $q = useQuasar()
 
 const props = defineProps({
@@ -393,7 +404,7 @@ const filter = ref('')
 // Paginação
 const pagination = ref({
   sortBy: 'id',
-  descending: false,
+  descending: true,
   page: 1,
   rowsPerPage: 10,
   rowsNumber: 0,
@@ -470,33 +481,43 @@ function closeModal() {
   modalMode.value = 'create'
 }
 
-function translateStatus(status) {
-  switch (status) {
-    case 'RENTED':
-      return t('common.status.rented')
-    case 'IN_TIME':
-      return t('common.status.in_time')
-    case 'LATE':
-      return t('common.status.late')
-    case 'DELIVERED_WITH_DELAY':
-      return t('common.status.delivered_with_delay')
-    default:
-      ''
-  }
-}
+// function translateStatus(status) {
+//   switch (status) {
+//     case 'RENTED':
+//       return t('common.status.rented')
+//     case 'IN_TIME':
+//       return t('common.status.in_time')
+//     case 'LATE':
+//       return t('common.status.late')
+//     case 'DELIVERED_WITH_DELAY':
+//       return t('common.status.delivered_with_delay')
+//     default:
+//       ''
+//   }
+// }
 
-function formatDateToBR(dateString) {
+function formatDate(dateString) {
   if (!dateString) {
     return null
   }
   const parts = dateString.split('-')
   if (parts.length !== 3) return dateString
+  
   const [year, month, day] = parts
+
+  if (locale.value && locale.value.toLowerCase() === 'en-us') {
+      return `${month}/${day}/${year}`
+  }
+  
   return `${day}/${month}/${year}`
 }
 
 const visibleColumns = computed(() => {
-  return props.columns.filter((col) => col.name !== 'password')
+  return props.columns.filter((col) => {
+    if (col.name === 'password') return false
+    if (col.name === 'actions' && !authStore.isAdmin()) return false
+    return true
+  })
 })
 
 onMounted(() => {

@@ -15,7 +15,7 @@ export const usePublishersStore = defineStore('publishers', () => {
       const page = paginationData.page - 1
       const size = paginationData.rowsPerPage || 10
 
-      let sort = null
+      let sort = 'id,desc'
       if (paginationData.sortBy) {
         sort = `${paginationData.sortBy},${paginationData.descending ? 'desc' : 'asc'}`
       }
