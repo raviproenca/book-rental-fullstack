@@ -42,8 +42,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // REMOVEMOS o Bean corsFilter para evitar o erro de conflito de tipos
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
