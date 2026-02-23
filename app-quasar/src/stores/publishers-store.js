@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { api } from 'boot/api'
+import { throwApiError } from 'src/utils/api-error'
 
 export const usePublishersStore = defineStore('publishers', () => {
   const publishers = ref([])
@@ -35,8 +36,7 @@ export const usePublishersStore = defineStore('publishers', () => {
         return fetchPublishers({ ...paginationData, page: 1 }, searchFilter)
       }
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao buscar editoras.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao buscar editoras.')
     } finally {
       loading.value = false
     }
@@ -48,8 +48,7 @@ export const usePublishersStore = defineStore('publishers', () => {
     try {
       await api.post('/publisher', publisherData)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao registrar editora.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao registrar editora.')
     } finally {
       loading.value = false
     }
@@ -61,8 +60,7 @@ export const usePublishersStore = defineStore('publishers', () => {
     try {
       await api.put(`/publisher/${publisherId}`, publisherData)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao editar editora.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao editar editora.')
     } finally {
       loading.value = false
     }
@@ -74,8 +72,7 @@ export const usePublishersStore = defineStore('publishers', () => {
     try {
       await api.delete(`/publisher/${publisherId}`)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao deletar editora.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao deletar editora.')
     } finally {
       loading.value = false
     }

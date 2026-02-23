@@ -439,7 +439,7 @@ const save = async () => {
   } catch (err) {
     $q.notify({
       type: 'negative',
-      message: err.message || 'Não foi possível editar.',
+      message: getErrorMessage(err, 'Não foi possível cadastrar.'),
     })
   }
 }
@@ -491,7 +491,7 @@ const edit = async () => {
   } catch (err) {
     $q.notify({
       type: 'negative',
-      message: err.message || 'Não foi possível editar.',
+      message: getErrorMessage(err, 'Não foi possível editar.'),
     })
   }
 }
@@ -523,7 +523,7 @@ const remove = async () => {
   } catch (err) {
     $q.notify({
       type: 'negative',
-      message: err.message || 'Não foi possível deletar.',
+      message: getErrorMessage(err, 'Não foi possível deletar.'),
     })
   }
 }
@@ -546,7 +546,7 @@ const confirm = async () => {
   } catch (err) {
     $q.notify({
       type: 'negative',
-      message: err.message || 'Não foi possível devolver o livro.',
+      message: getErrorMessage(err, 'Não foi possível devolver o livro.'),
     })
   }
 }
@@ -742,6 +742,19 @@ function getRulesFor(column) {
     default:
       return requiredRule
   }
+}
+
+/**
+ * Extracts the most useful error message from a backend ApiError.
+ * If the error carries field-level validationErrors, returns the first one.
+ * Otherwise falls back to err.message or the provided fallback string.
+ */
+function getErrorMessage(err, fallback) {
+  if (err.validationErrors) {
+    const first = Object.values(err.validationErrors)[0]
+    if (first) return first
+  }
+  return err.message || fallback
 }
 
 const handleSubmit = async () => {

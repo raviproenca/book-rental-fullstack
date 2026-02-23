@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { api } from 'boot/api'
+import { throwApiError } from 'src/utils/api-error'
 
 export const useBooksStore = defineStore('books', () => {
   const books = ref([])
@@ -36,8 +37,7 @@ export const useBooksStore = defineStore('books', () => {
         return fetchBooks({ ...paginationData, page: 1 }, searchFilter)
       }
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao buscar livros.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao buscar livros.')
     } finally {
       loading.value = false
     }
@@ -49,8 +49,7 @@ export const useBooksStore = defineStore('books', () => {
     try {
       await api.post('/book', bookData)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao registrar livro.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao registrar livro.')
     } finally {
       loading.value = false
     }
@@ -62,8 +61,7 @@ export const useBooksStore = defineStore('books', () => {
     try {
       await api.put(`/book/${bookId}`, bookData)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao editar livro.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao editar livro.')
     } finally {
       loading.value = false
     }
@@ -75,8 +73,7 @@ export const useBooksStore = defineStore('books', () => {
     try {
       await api.delete(`/book/${bookId}`)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao deletar livro'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao deletar livro.')
     } finally {
       loading.value = false
     }

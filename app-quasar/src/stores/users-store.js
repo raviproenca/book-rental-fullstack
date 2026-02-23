@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { api } from 'boot/api'
+import { throwApiError } from 'src/utils/api-error'
 
 export const useUsersStore = defineStore('users', () => {
   const users = ref([])
@@ -36,8 +37,7 @@ export const useUsersStore = defineStore('users', () => {
         return fetchUsers({ ...paginationData, page: 1 }, searchFilter)
       }
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao buscar usuários.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao buscar usuários.')
     } finally {
       loading.value = false
     }
@@ -49,8 +49,7 @@ export const useUsersStore = defineStore('users', () => {
     try {
       await api.post('/user', userData)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao registrar usuários.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao registrar usuário.')
     } finally {
       loading.value = false
     }
@@ -62,8 +61,7 @@ export const useUsersStore = defineStore('users', () => {
     try {
       await api.put(`/user/${userId}`, userData)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao editar usuários.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao editar usuário.')
     } finally {
       loading.value = false
     }
@@ -75,8 +73,7 @@ export const useUsersStore = defineStore('users', () => {
     try {
       await api.delete(`/user/${userId}`)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao deletar usuários.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao deletar usuário.')
     } finally {
       loading.value = false
     }

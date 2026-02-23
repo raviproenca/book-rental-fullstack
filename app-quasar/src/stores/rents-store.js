@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { api } from 'boot/api'
+import { throwApiError } from 'src/utils/api-error'
 
 export const useRentsStore = defineStore('rents', () => {
   const rents = ref([])
@@ -36,8 +37,7 @@ export const useRentsStore = defineStore('rents', () => {
         return fetchRents({ ...paginationData, page: 1 }, searchFilter)
       }
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao buscar aluguéis.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao buscar aluguéis.')
     } finally {
       loading.value = false
     }
@@ -49,8 +49,7 @@ export const useRentsStore = defineStore('rents', () => {
     try {
       await api.post('/rent', rentData)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao registrar aluguel.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao registrar aluguel.')
     } finally {
       loading.value = false
     }
@@ -62,8 +61,7 @@ export const useRentsStore = defineStore('rents', () => {
     try {
       await api.put(`/rent/${rentId}`, rentData)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao editar aluguel.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao editar aluguel.')
     } finally {
       loading.value = false
     }
@@ -75,8 +73,7 @@ export const useRentsStore = defineStore('rents', () => {
     try {
       await api.put(`/rent/update/${rentId}`)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao confirmar aluguel.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao confirmar aluguel.')
     } finally {
       loading.value = false
     }

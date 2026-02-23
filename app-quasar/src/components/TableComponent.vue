@@ -202,6 +202,7 @@
 
               <q-card-actions align="center">
                 <q-btn
+                  v-if="!props.row.status"
                   flat
                   round
                   dense
@@ -237,7 +238,7 @@
 
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <q-btn flat round dense icon="o_edit" color="green" @click="openEditModal(props.row)" />
+            <q-btn v-if="!props.row.status" flat round dense icon="o_edit" color="green" @click="openEditModal(props.row)" />
             <q-btn
               v-if="!props.row.status"
               flat

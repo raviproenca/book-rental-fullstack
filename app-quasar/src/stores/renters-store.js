@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { api } from 'boot/api'
+import { throwApiError } from 'src/utils/api-error'
 
 export const useRentersStore = defineStore('renters', () => {
   const renters = ref([])
@@ -36,8 +37,7 @@ export const useRentersStore = defineStore('renters', () => {
         return fetchRenters({ ...paginationData, page: 1 }, searchFilter)
       }
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao buscar locatários.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao buscar locatários.')
     } finally {
       loading.value = false
     }
@@ -49,8 +49,7 @@ export const useRentersStore = defineStore('renters', () => {
     try {
       await api.post('/renter', renterData)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao registrar locatário.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao registrar locatário.')
     } finally {
       loading.value = false
     }
@@ -62,8 +61,7 @@ export const useRentersStore = defineStore('renters', () => {
     try {
       await api.put(`/renter/${renterId}`, renterData)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao editar locatário.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao editar locatário.')
     } finally {
       loading.value = false
     }
@@ -75,8 +73,7 @@ export const useRentersStore = defineStore('renters', () => {
     try {
       await api.delete(`/renter/${renterId}`)
     } catch (err) {
-      const message = err.response ? err.response.data.message : 'Erro ao deletar locatário.'
-      throw new Error(message)
+      throwApiError(err, 'Erro ao deletar locatário.')
     } finally {
       loading.value = false
     }
