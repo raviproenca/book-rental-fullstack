@@ -2,31 +2,65 @@
   <TableComponent
     :columns="booksth"
     :rows="books"
-    :placeholder="'Pesquisar livros'"
+    :total-items="totalItems"
+    :loading="loading"
+    :fetch-data="fetchBooks"
+    :register-data="registerBook"
+    :edit-data="editBook"
+    :delete-data="deleteBook"
+    :placeholder="t('pages.books.searchPlaceholder')"
     area-type="books"
-    >Livros</TableComponent
+    >{{ t('pages.books.title') }}</TableComponent
   >
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { computed } from 'vue'
 import { useBooksStore } from 'src/stores/books-store'
 import TableComponent from 'src/components/TableComponent.vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 
-const booksth = [
-  { name: 'name', label: 'Nome', field: 'name' },
-  { name: 'author', label: 'Autor', field: 'author' },
-  { name: 'publisher', label: 'Editora', field: 'publisher', apiKey: 'publisherId' },
-  { name: 'launchDate', label: 'Data de Lançamento', field: 'launchDate' },
-  { name: 'totalQuantity', label: 'Estoque', field: 'totalQuantity' },
-  { name: 'totalInUse', label: 'Alugados', field: 'totalInUse', form: false },
-]
+const { t } = useI18n()
+
+const booksth = computed(() => [
+  { name: 'name', label: t('common.name'), field: 'name', align: 'center', sortable: true },
+  { name: 'author', label: t('common.author'), field: 'author', align: 'center', sortable: true },
+  {
+    name: 'publisher',
+    label: t('common.publisher'),
+    field: 'publisher',
+    format: (val) => val?.name ?? '-',
+    apiKey: 'publisherId',
+    align: 'center',
+    sortable: true,
+  },
+  {
+    name: 'launchDate',
+    label: t('common.launchDate'),
+    field: 'launchDate',
+    align: 'center',
+    sortable: true,
+  },
+  {
+    name: 'totalQuantity',
+    label: t('common.totalQuantity'),
+    field: 'totalQuantity',
+    align: 'center',
+    sortable: true,
+  },
+  {
+    name: 'totalInUse',
+    label: t('common.totalInUse'),
+    field: 'totalInUse',
+    form: false,
+    align: 'center',
+    sortable: true,
+  },
+  { name: 'actions', label: t('common.actions'), align: 'center' },
+])
 
 const bookStore = useBooksStore()
-const { books } = storeToRefs(bookStore)
-
-onMounted(async () => {
-  bookStore.fetchBooks()
-})
+const { books, totalItems, loading } = storeToRefs(bookStore)
+const { fetchBooks, registerBook, editBook, deleteBook } = bookStore
 </script>

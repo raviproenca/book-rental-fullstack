@@ -1,97 +1,123 @@
 <template>
-  <q-page padding>
-    <div class="row q-gutter-lg q-pa-md" style="width: 100%; max-width: 1200px">
-      <div class="col-12 col-md">
-        <q-card class="dashboard-cards border-radius">
+  <q-page padding class="flex flex-center">
+    <div class="row q-mx-auto" style="width: 100%; max-width: 1400px">
+      <div class="col-12 col-md-6 q-pa-sm">
+        <q-card class="dashboard-cards border-radius q-mb-md">
           <q-card-section>
-            <div class="row items-center justify-center q-gutter-x-lg">
-              <q-icon name="emoji_events" class="primeiro-mais-alugado" size="xl"></q-icon>
-              <h2 class="text-h5 text-white text-weight-bolder text-with-shadow">
-                {{ firstBook?.name || 'Carregando...' }}
-              </h2>
-              <h2 class="text-h5 text-white text-weight-bolder">
-                {{ firstBook?.totalRents }}
-              </h2>
-            </div>
+            <p
+              :class="[
+                'text-white',
+                'text-center',
+                'text-weight-bolder',
+                $q.screen.lt.md ? 'text-h6' : 'text-h5',
+              ]"
+              style="opacity: 60%"
+            >
+              {{ t('dashboard.moreRented') }}
+            </p>
 
-            <div class="row items-center justify-center q-gutter-x-lg">
-              <q-icon name="workspace_premium" class="segundo-mais-alugado" size="lg"></q-icon>
-              <h2 class="text-h6 text-white text-weight-bolder text-with-shadow">
-                {{ secondBook?.name || 'Carregando...' }}
-              </h2>
-              <h2 class="text-h6 text-white text-weight-bolder">
-                {{ secondBook?.totalRents }}
-              </h2>
-            </div>
+            <div class="row justify-center items-center q-gutter-x-lg q-mt-sm">
+              <div class="column items-center q-gutter-y-md">
+                <q-icon
+                  name="emoji_events"
+                  class="primeiro-mais-alugado"
+                  :size="$q.screen.lt.md ? 'md' : 'xl'"
+                ></q-icon>
+                <q-icon
+                  name="workspace_premium"
+                  class="segundo-mais-alugado"
+                  :size="$q.screen.lt.md ? 'sm' : 'lg'"
+                ></q-icon>
+                <q-icon
+                  name="military_tech"
+                  class="terceiro-mais-alugado"
+                  :size="$q.screen.lt.md ? 'sm' : 'lg'"
+                ></q-icon>
+              </div>
 
-            <div class="row items-center justify-center q-gutter-x-lg">
-              <q-icon name="military_tech" class="terceiro-mais-alugado" size="md"></q-icon>
-              <h2 class="text-subtitle1 text-white text-weight-bolder text-with-shadow">
-                {{ thirdBook?.name || 'Carregando...' }}
-              </h2>
-              <h2 class="text-subtitle1 text-white text-weight-bolder">
-                {{ thirdBook?.totalRents }}
-              </h2>
+              <div class="column q-gutter-y-sm">
+                <p :class="['text-white', 'text-weight-bolder', pSizes(), 'book-title-align']">
+                  {{ firstBook?.name || 'Carregando...' }}
+                </p>
+                <p :class="['text-white', 'text-weight-bolder', pSizes(), 'book-title-align']">
+                  {{ secondBook?.name || 'Carregando...' }}
+                </p>
+                <p :class="['text-white', 'text-weight-bolder', pSizes(), 'book-title-align']">
+                  {{ thirdBook?.name || 'Carregando...' }}
+                </p>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+
+        <div class="row justify-center q-gutter-sm">
+          <q-card class="dashboard-cards border-radius col-grow">
+            <q-card-section class="q-gutter-y-sm">
+              <div class="row justify-between">
+                <q-icon name="o_library_add_check" size="sm" color="white" />
+                <p class="text-white text-weight-bold">{{ rentedBooks }}</p>
+              </div>
+              <p class="text-white text-weight-bold">{{ t('dashboard.lastMonth') }}</p>
+            </q-card-section>
+          </q-card>
+
+          <q-card class="dashboard-cards border-radius col-grow">
+            <q-card-section class="q-gutter-y-sm">
+              <div class="row justify-between">
+                <q-icon name="schedule" size="sm" color="white" />
+                <p class="text-white text-weight-bold">{{ rentedLateBooks }}</p>
+              </div>
+              <p class="text-white text-weight-bold">{{ t('dashboard.late') }}</p>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 q-pa-sm column">
+        <q-card class="dashboard-cards border-radius col-grow">
+          <q-card-section class="column full-height">
+            <q-select
+              v-model="selectedRenter"
+              dark
+              dense
+              rounded
+              :options="perRenter"
+              option-label="name"
+              :label="t('dashboard.selectRenter')"
+              clearable
+            />
+            <div class="q-mt-md col-grow">
+              <div style="position: relative; height: 98%; width: 100%; min-height: 300px">
+                <q-inner-loading :showing="isLoading" :label="t('dashboard.loading')" />
+
+                <div v-if="error" class="fullscreen text-center flex-center">
+                  <div class="text-negative">
+                    <q-icon name="error" size="lg" />
+                    <p>{{ error }}</p>
+                  </div>
+                </div>
+
+                <canvas v-show="!isLoading && !error" ref="chartDoughnutCanvas"></canvas>
+              </div>
             </div>
           </q-card-section>
         </q-card>
       </div>
 
-      <div class="row col-12 col-md justify-center">
-        <q-card class="dashboard-cards border-radius col-grow">
-          <q-card-section>
-            <p>test</p>
-          </q-card-section>
-        </q-card>
-
-        <q-card class="dashboard-cards border-radius col-grow">
-          <q-card-section>
-            <p>test</p>
-          </q-card-section>
-        </q-card>
-      </div>
-
-      <div class="col-12 col-md">
+      <div class="col-12 col-md-12 q-pa-sm">
         <q-card class="dashboard-cards border-radius">
           <q-card-section style="padding: 8px 16px">
-            <div style="height: 400px; position: relative">
-              <q-inner-loading :showing="isLoading" label="Calculando dados do gráfico..." />
+            <div style="position: relative; height: 350px">
+              <q-inner-loading :showing="isLoading" :label="t('dashboard.loading')" />
 
-              <div v-if="error" class="fullscreen text-center flex flex-center">
+              <div v-if="error" class="fullscreen text-center flex-flex-center">
                 <div class="text-negative">
                   <q-icon name="error" size="lg" />
                   <p>{{ error }}</p>
                 </div>
               </div>
 
-              <canvas
-                v-show="!isLoading && !error"
-                ref="chartDoughnutCanvas"
-                style="width: 100%; height: 100%; display: block"
-              ></canvas>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
-
-      <div class="col-12 col-md">
-        <q-card class="dashboard-cards border-radius">
-          <q-card-section style="padding: 8px 16px">
-            <div style="height: 400px; position: relative">
-              <q-inner-loading :showing="isLoading" label="Calculando dados do gráfico..." />
-
-              <div v-if="error" class="fullscreen text-center flex flex-center">
-                <div class="text-negative">
-                  <q-icon name="error" size="lg" />
-                  <p>{{ error }}</p>
-                </div>
-              </div>
-
-              <canvas
-                v-show="!isLoading && !error"
-                ref="chartBarCanvas"
-                style="width: 100%; height: 100%; display: block"
-              ></canvas>
+              <canvas v-show="!isLoading && !error" ref="chartBarCanvas"></canvas>
             </div>
           </q-card-section>
         </q-card>
@@ -100,27 +126,55 @@
   </q-page>
 </template>
 
+<style>
+.book-title-align {
+  transform: translateY(10px);
+}
+</style>
+
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useQuasar } from 'quasar'
 import { useDashboardsStore } from 'src/stores/dashboard-store'
 import { Chart, registerables } from 'chart.js'
+import { useI18n } from 'vue-i18n'
+
+const { t, tm } = useI18n()
 
 Chart.register(...registerables)
 
 const store = useDashboardsStore()
-const { bookMoreRented, deliveredInTimeQuantity, deliveredWithDelayQuantity } = storeToRefs(store)
+const {
+  bookMoreRented,
+  deliveredInTimeQuantity,
+  deliveredWithDelayQuantity,
+  rentsQuantity,
+  rentsLateQuantity,
+  rentsPerRenter,
+} = storeToRefs(store)
 
 const firstBook = computed(() => bookMoreRented.value.data?.[0])
 const secondBook = computed(() => bookMoreRented.value.data?.[1])
 const thirdBook = computed(() => bookMoreRented.value.data?.[2])
 
+const rentedBooks = computed(() => rentsQuantity.value.data)
+const rentedLateBooks = computed(() => rentsLateQuantity.value.data)
+
+const perRenter = computed(() => rentsPerRenter.value.data || [])
+
+const selectedRenter = ref(null)
+
 const $q = useQuasar()
 const chartBarCanvas = ref(null)
 const chartDoughnutCanvas = ref(null)
 
-let chartInstance = null
+const pSizes = () => {
+  return $q.screen.lt.md ? 'text-subtitle1' : 'text-h6'
+}
+
+let chartDoughnutInstance = null
+let chartBarInstance = null
 
 const isLoading = computed(
   () =>
@@ -140,12 +194,15 @@ const chartDoughnutData = computed(() => {
   const limeGreen = '#A7ED4A'
   const purple = '#9B59B6'
 
+  const activeRents = selectedRenter.value?.rentsActive || 0
+  const totalRents = selectedRenter.value?.rentsQuantity || 0
+
   return {
-    labels: ['Livros alugados no momento', 'Total de aluguéis realizados'],
+    labels: [t('dashboard.atMoment'), t('dashboard.totalRents')],
     datasets: [
       {
-        label: 'Status dos Livros',
-        data: [1, 1],
+        label: t('dashboard.status'),
+        data: [activeRents, totalRents],
         backgroundColor: [limeGreen, purple],
         borderColor: [limeGreen, purple],
         borderWidth: 1,
@@ -155,18 +212,41 @@ const chartDoughnutData = computed(() => {
 })
 
 const chartBarData = computed(() => {
+  const mergedData = new Map()
+
+  deliveredInTimeQuantity.value.data?.forEach((item) => {
+    mergedData.set(item.monthYear, {
+      inTime: item.count,
+      withDelay: 0,
+    })
+  })
+
+  deliveredWithDelayQuantity.value.data?.forEach((item) => {
+    const existing = mergedData.get(item.monthYear) || { inTime: 0 }
+    mergedData.set(item.monthYear, {
+      inTime: existing.inTime,
+      withDelay: item.count,
+    })
+  })
+
+  const labels = Array.from(mergedData.keys()).sort((a, b) => b.localeCompare(a))
+
+  const inTimeData = labels.map((monthYear) => mergedData.get(monthYear)?.inTime || 0)
+  const withDelayData = labels.map((monthYear) => mergedData.get(monthYear)?.withDelay || 0)
+
   return {
-    labels: ['Maio', 'Junho', 'Julho', 'Agosto', 'Setembro'],
+    labels: tm('dashboard.months'),
+
     datasets: [
       {
-        label: 'No Prazo',
-        data: [10, 15, 25, 35, 50],
+        label: t('dashboard.in_time'),
+        data: inTimeData,
         backgroundColor: '#00C9FF',
         borderRadius: 6,
       },
       {
-        label: 'Fora do Prazo',
-        data: [5, 10, 15, 20, 35],
+        label: t('dashboard.with_delay'),
+        data: withDelayData,
         backgroundColor: '#FF7F00',
         borderRadius: 6,
       },
@@ -228,7 +308,7 @@ const chartBarOptions = computed(() => ({
     legend: {
       position: 'top',
       labels: {
-        color: $q.dark.isActive ? 'white' : 'black',
+        color: 'white',
       },
     },
     tooltip: {
@@ -242,25 +322,26 @@ const chartBarOptions = computed(() => ({
     },
     subtitle: {
       display: true,
-      text: `Total no prazo (últimos 5 meses): 60 | Total com atraso: 25`,
-      color: $q.dark.isActive ? '#ccc' : '#666',
+      text: t('dashboard.total'),
+      color: '#fff',
       font: {
         size: 12,
         weight: 'normal',
       },
       padding: {
-        bottom: 25,
+        bottom: 15,
+        top: 5,
       },
     },
   },
   scales: {
     y: {
       beginAtZero: true,
-      ticks: { color: $q.dark.isActive ? 'white' : 'black' },
+      ticks: { color: 'white' },
       grid: { color: $q.dark.isActive ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' },
     },
     x: {
-      ticks: { color: $q.dark.isActive ? 'white' : 'black' },
+      ticks: { color: 'white' },
       grid: { color: $q.dark.isActive ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' },
     },
   },
@@ -270,6 +351,9 @@ onMounted(() => {
   store.fetchBookMoreRented(3)
   store.fetchDeliveredInTimeQuantity(5)
   store.fetchDeliveredWithDelayQuantity(5)
+  store.fetchRentsQuantity(1)
+  store.fetchRentsLateQuantity(1)
+  store.fetchRentsPerRenter()
 })
 
 watchEffect(() => {
@@ -277,11 +361,10 @@ watchEffect(() => {
   const ctxBar = chartBarCanvas.value?.getContext('2d')
 
   if (ctxBar && chartBarData.value) {
-    if (chartInstance) {
-      chartInstance.destroy()
+    if (chartBarInstance) {
+      chartBarInstance.destroy()
     }
-
-    chartInstance = new Chart(ctxBar, {
+    chartBarInstance = new Chart(ctxBar, {
       type: 'bar',
       data: chartBarData.value,
       options: chartBarOptions.value,
@@ -289,11 +372,10 @@ watchEffect(() => {
   }
 
   if (ctxDoughnut && chartDoughnutData.value) {
-    if (chartInstance) {
-      chartInstance.destroy()
+    if (chartDoughnutInstance) {
+      chartDoughnutInstance.destroy()
     }
-
-    chartInstance = new Chart(ctxDoughnut, {
+    chartDoughnutInstance = new Chart(ctxDoughnut, {
       type: 'doughnut',
       data: chartDoughnutData.value,
       options: chartDoughnutOptions.value,
@@ -302,9 +384,13 @@ watchEffect(() => {
 })
 
 onBeforeUnmount(() => {
-  if (chartInstance) {
-    chartInstance.destroy()
-    chartInstance = null
+  if (chartBarInstance) {
+    chartBarInstance.destroy()
+    chartBarInstance = null
+  }
+  if (chartDoughnutInstance) {
+    chartDoughnutInstance.destroy()
+    chartDoughnutInstance = null
   }
 })
 </script>

@@ -2,30 +2,36 @@
   <TableComponent
     :columns="usersth"
     :rows="users"
-    :placeholder="'Pesquisar usuários'"
+    :total-items="totalItems"
+    :loading="loading"
+    :fetch-data="fetchUsers"
+    :register-data="registerUser"
+    :edit-data="editUser"
+    :delete-data="deleteUser"
+    :placeholder="t('pages.users.searchPlaceholder')"
     :area-type="'users'"
-    >Usuários</TableComponent
+    >{{ t('pages.users.title') }}</TableComponent
   >
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { computed } from 'vue'
 import { useUsersStore } from 'src/stores/users-store'
 import { storeToRefs } from 'pinia'
 import TableComponent from 'src/components/TableComponent.vue'
+import { useI18n } from 'vue-i18n'
 
-const usersth = [
-  { name: 'name', label: 'Nome', field: 'name' },
-  { name: 'email', label: 'Email', field: 'email' },
-  { name: 'password', label: 'Senha', field: 'password' },
-  { name: 'role', label: 'Permissão', field: 'role' },
-]
+const { t } = useI18n()
+
+const usersth = computed(() => [
+  { name: 'name', label: t('common.name'), field: 'name', align: 'center', sortable: true },
+  { name: 'email', label: t('common.email'), field: 'email', align: 'center', sortable: true },
+  { name: 'password', label: t('common.password'), field: 'password' },
+  { name: 'role', label: t('common.role'), field: 'role', align: 'center', sortable: true },
+  { name: 'actions', label: t('common.actions'), align: 'center' },
+])
 
 const userStore = useUsersStore()
-
-const { users } = storeToRefs(userStore)
-
-onMounted(async () => {
-  userStore.fetchUsers()
-})
+const { users, totalItems, loading } = storeToRefs(userStore)
+const { fetchUsers, registerUser, editUser, deleteUser } = userStore
 </script>

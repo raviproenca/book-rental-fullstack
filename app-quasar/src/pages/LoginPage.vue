@@ -7,7 +7,7 @@
           flat
           dense
           no-caps
-          label="Esqueci minha senha"
+          :label="t('pages.login.forgotPassword')"
           class="text-white text-weight-bolder text-with-shadow text-subtitle1"
         />
       </div>
@@ -18,7 +18,7 @@
             <q-input
               v-model="email"
               type="email"
-              placeholder="Digite seu email"
+              :placeholder="t('pages.login.typeEmail')"
               outlined
               class="input-style"
               rounded
@@ -31,7 +31,7 @@
             <q-input
               v-model="password"
               type="password"
-              placeholder="Digite sua senha"
+              :placeholder="t('pages.login.typePassword')"
               outlined
               class="input-style"
               rounded
@@ -42,15 +42,26 @@
             </q-input>
           </q-card-section>
 
-          <q-card-actions align="center" class="q-mb-xl q-mt-sm">
+          <q-card-actions align="center" class="column q-gutter-y-xl">
             <q-btn
-              label="Entrar"
+              :label="t('pages.login.enter')"
               type="submit"
               no-caps
               class="text-white text-weight-bold"
               style="width: 60%; border-radius: 10px; background-color: #006670"
               size="lg"
             />
+            <div class="row justify-center q-gutter-x-sm q-mb-xs">
+              <q-btn dense flat @click="changeLang('en-US')">
+                <img src="../assets/us.png" alt="us" />
+              </q-btn>
+              <q-btn dense flat @click="changeLang('pt-BR')">
+                <img src="../assets/br.png" alt="br" />
+              </q-btn>
+              <q-btn dense flat @click="changeLang('es-ES')">
+                <img src="../assets/es.png" alt="es" />
+              </q-btn>
+            </div>
           </q-card-actions>
         </q-form>
       </q-card>
@@ -71,6 +82,7 @@ import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth-store'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 const email = ref('')
 const password = ref('')
@@ -79,6 +91,12 @@ const loading = ref(false)
 const quasarInstance = useQuasar()
 const authStore = useAuthStore()
 const router = useRouter()
+
+const { t, locale } = useI18n({ useScope: 'global' })
+
+function changeLang(lang) {
+  locale.value = lang
+}
 
 const handleLogin = async () => {
   loading.value = true

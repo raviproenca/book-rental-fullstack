@@ -1,6 +1,5 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file
-
 import { defineConfig } from '#q-app/wrappers'
 
 export default defineConfig((/* ctx */) => {
@@ -11,7 +10,7 @@ export default defineConfig((/* ctx */) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: [],
+    boot: ['i18n', 'api'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
     css: ['app.scss'],
@@ -36,6 +35,16 @@ export default defineConfig((/* ctx */) => {
       target: {
         browser: ['es2022', 'firefox115', 'chrome115', 'safari14'],
         node: 'node20',
+      },
+
+      rawDefine: {
+        __VUE_I18N_FULL_INSTALL__: true,
+        __VUE_I18N_LEGACY_API__: false, // legacy: false
+        __INTLIFY_PROD_DEVTOOLS__: false,
+      },
+
+      env: {
+        VITE_API_BASE_URL: 'https://evening-increase-intersection-views.trycloudflare.com/',
       },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'
@@ -75,6 +84,15 @@ export default defineConfig((/* ctx */) => {
     devServer: {
       // https: true,
       open: true, // opens browser window automatically
+      proxy: {
+        // Redireciona qualquer chamada que comece com /api
+        '/api': {
+          target: 'http://localhost:8080',
+          changeOrigin: true,
+          // Reescreve a URL: remove o '/api' do começo
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework

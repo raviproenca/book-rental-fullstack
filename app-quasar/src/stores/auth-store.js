@@ -19,6 +19,7 @@ export const useAuthStore = defineStore('auth', () => {
       delete api.defaults.headers.common['Authorization']
 
       const response = await api.post('/auth/login', credentials)
+      localStorage.setItem('user', JSON.stringify(credentials))
 
       if (response.data.token) {
         token.value = response.data.token

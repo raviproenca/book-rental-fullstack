@@ -7,7 +7,7 @@
 }
 
 .modal-color {
-  background: linear-gradient(to left, #006670, #00a1b1);
+  background: linear-gradient(to left, #006670, #00a1b1);;
 }
 
 .header-color {
@@ -49,4 +49,11 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+.table-header th {
+  background-color: #004147;
+  color: white;
+  font-size: 1rem;
+  font-weight: bolder;
 }
