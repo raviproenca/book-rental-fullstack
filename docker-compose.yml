@@ -56,3 +56,5 @@ services:
 
 volumes:
   postgres_data:
+    external: true
+    name: raviproencagithubio_db-data
