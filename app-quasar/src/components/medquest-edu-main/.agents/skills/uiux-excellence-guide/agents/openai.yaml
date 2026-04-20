@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI UX Excellence Guide"
+  short_description: "Criar UI bela, acessivel e com UX excelente"
+  default_prompt: "Use $uiux-excellence-guide para projetar interfaces com alta qualidade visual, acessibilidade e performance mensuravel."

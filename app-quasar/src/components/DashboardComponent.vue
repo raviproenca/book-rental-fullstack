@@ -1,9 +1,9 @@
 <template>
   <q-page padding class="flex flex-center">
     <div class="row q-mx-auto" style="width: 100%; max-width: 1400px">
-      <div class="col-12 col-md-6 q-pa-sm">
-        <q-card class="dashboard-cards border-radius q-mb-md">
-          <q-card-section>
+      <div class="col-12 col-md-6 q-pa-sm column">
+        <q-card class="dashboard-cards border-radius q-mb-md col-grow column">
+          <q-card-section class="col-grow column justify-center">
             <p
               :class="[
                 'text-white',
