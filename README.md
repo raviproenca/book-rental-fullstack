@@ -1,6 +1,6 @@
-<img width="1877" height="1037" alt="dashboard" src="https://github.com/user-attachments/assets/4c6ae2dd-c930-49d9-aca5-c1d8d0131633" />
-<img width="921" height="696" alt="login_screen" src="https://github.com/user-attachments/assets/4a361be0-2d1c-423f-9465-3c2a84b20559" />
-<img width="1877" height="1039" alt="table" src="https://github.com/user-attachments/assets/75bbab9f-9720-425d-824f-037b690a0881" />
+<img width="1920" height="1080" alt="dashboard" src="https://github.com/user-attachments/assets/4c6ae2dd-c930-49d9-aca5-c1d8d0131633" />
+<img width="1920" height="1080" alt="login_screen" src="https://github.com/user-attachments/assets/4a361be0-2d1c-423f-9465-3c2a84b20559" />
+<img width="1920" height="1080" alt="table" src="https://github.com/user-attachments/assets/75bbab9f-9720-425d-824f-037b690a0881" />
 
 # book-rental-fullstack
 
